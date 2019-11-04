@@ -4,7 +4,7 @@ import { PACKAGE_VERSION } from './version.js';
 export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.16');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
-export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
+export const API_KEY = '2mCK05cKuf0xuQr7lrOLXcYLKvMUBx/PwoFBf85jIms=';
 
 // The array of possible hosts to connect to.
 export const KNOWN_HOSTS = {hosted: 'web.tinode.co', local: 'localhost:6060'};
@@ -65,10 +65,10 @@ export const MAX_IMAGE_DIM = 768;
 export const MAX_ONLINE_IN_TOPIC = 4;
 
 // Link for "Contact Us".
-export const LINK_CONTACT_US = 'email:info@tinode.co';
+export const LINK_CONTACT_US = 'email:info@larva.id';
 
 // Link to Privacy Policy.
-export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.htnl';
+export const LINK_PRIVACY_POLICY = 'https://larva.id/privacy.htnl';
 
 // Link to Terms of Service.
-export const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
+export const LINK_TERMS_OF_SERVICE = 'https://larva.id/terms.html';
