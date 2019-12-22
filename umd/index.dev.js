@@ -122,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_TERMS_OF_SERVICE", function() { return LINK_TERMS_OF_SERVICE; });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
-var APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__["PACKAGE_VERSION"] || '0.16');
+var APP_NAME = 'AdiraChatWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__["PACKAGE_VERSION"] || '0.16');
 var API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 var KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
@@ -2794,12 +2794,12 @@ var LogoView = function (_React$PureComponent) {
         id: "dummy-view",
         className: this.props.hideSelf ? 'nodisplay' : null
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://github.com/tinode/chat/"
+        href: "https://github.com/abaron/chat/"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         id: "logo",
         alt: "logo",
         src: "img/logo.svg"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Tinode Web")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Adira Chat Web")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_client",
         defaultMessage: "Client:"
       }), " ", version), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
