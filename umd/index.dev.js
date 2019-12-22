@@ -5226,12 +5226,12 @@ var LogoView = function (_React$PureComponent) {
         id: "dummy-view",
         className: this.props.hideSelf ? 'nodisplay' : null
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://github.com/tinode/chat/"
+        href: "https://github.com/abaron/chat/"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         id: "logo",
         alt: "logo",
         src: "img/logo.svg"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Tinode Web")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Adira Chat")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_client",
         defaultMessage: "Client:"
       }), " ", version), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
