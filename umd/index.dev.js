@@ -147,9 +147,9 @@ var MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 var MAX_IMAGE_DIM = 768;
 var MAX_ONLINE_IN_TOPIC = 4;
 var MAX_TITLE_LENGTH = 60;
-var LINK_CONTACT_US = 'email:info@tinode.co';
-var LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
-var LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
+var LINK_CONTACT_US = 'email:info@larva.id';
+var LINK_PRIVACY_POLICY = 'https://larva.id/privacy.html';
+var LINK_TERMS_OF_SERVICE = 'https://larva.id/terms.html';
 
 /***/ }),
 
