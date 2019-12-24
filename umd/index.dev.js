@@ -126,7 +126,7 @@ var APP_NAME = 'AdiraChatWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__["PACK
 var API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 var KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
-  local: 'localhost:6060'
+  local: 'localhost:2096'
 };
 var DEFAULT_HOST = KNOWN_HOSTS.hosted;
 var LOGGING_ENABLED = true;
