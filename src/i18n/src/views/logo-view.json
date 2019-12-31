@@ -1,0 +1,10 @@
+[
+  {
+    "id": "label_client",
+    "defaultMessage": "Client:"
+  },
+  {
+    "id": "label_server",
+    "defaultMessage": "Server:"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "action_cancel",
+    "description": "Call to action [cancel]",
+    "defaultMessage": "cancel"
+  },
+  {
+    "id": "upload_finishing",
+    "description": "Notification that upload is finishing",
+    "defaultMessage": "finishing..."
+  }
+]

@@ -1,0 +1,7 @@
+[
+  {
+    "id": "more_online_members",
+    "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+    "defaultMessage": "+{overflow} more"
+  }
+]

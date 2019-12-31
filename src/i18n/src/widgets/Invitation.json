@@ -1,0 +1,22 @@
+[
+  {
+    "id": "chat_invitation",
+    "description": "New chat invitation message: [Accept] [Ignore] [Block].",
+    "defaultMessage": "You are invited to start a new chat. What would you like to do?"
+  },
+  {
+    "id": "chat_invitation_accept",
+    "description": "Action [Accept] for chat invitation.",
+    "defaultMessage": "Accept"
+  },
+  {
+    "id": "chat_invitation_ignore",
+    "description": "Action [Ignore] for chat invitation.",
+    "defaultMessage": "Ignore"
+  },
+  {
+    "id": "chat_invitation_block",
+    "description": "Action [Block] for chat invitation.",
+    "defaultMessage": "Block"
+  }
+]

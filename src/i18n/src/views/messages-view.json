@@ -1,0 +1,37 @@
+[
+  {
+    "id": "online_now",
+    "description": "Indicator that the user or topic is currently online",
+    "defaultMessage": "online now"
+  },
+  {
+    "id": "last_seen_timestamp",
+    "description": "Label for the timestamp of when the user or topic was last online",
+    "defaultMessage": "Last seen"
+  },
+  {
+    "id": "title_not_found",
+    "description": "Title shown when topic is not found",
+    "defaultMessage": "Not found"
+  },
+  {
+    "id": "unnamed_topic",
+    "description": "Title shown when the topic has no name",
+    "defaultMessage": "Unnamed"
+  },
+  {
+    "id": "messages_not_readable",
+    "description": "Message shown in topic without the read access",
+    "defaultMessage": "no access to messages"
+  },
+  {
+    "id": "peers_messaging_disabled",
+    "description": "Shown when the p2p peer's messaging is disabled",
+    "defaultMessage": "Peer's messaging is disabled."
+  },
+  {
+    "id": "enable_peers_messaging",
+    "description": "Call to action to enable peer's messaging",
+    "defaultMessage": "Enable"
+  }
+]

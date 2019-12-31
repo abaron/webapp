@@ -1,0 +1,17 @@
+[
+  {
+    "id": "label_server_to_use",
+    "description": "Label for server selector in SettingsView",
+    "defaultMessage": "Server to use:"
+  },
+  {
+    "id": "label_wire_transport",
+    "description": "Label for wire transport selection in SettingsView",
+    "defaultMessage": "Wire transport:"
+  },
+  {
+    "id": "button_update",
+    "description": "Button [Update]",
+    "defaultMessage": "Update"
+  }
+]

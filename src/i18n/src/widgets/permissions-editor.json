@@ -1,0 +1,47 @@
+[
+  {
+    "id": "permission_join",
+    "description": "Name of J permission",
+    "defaultMessage": "Join ({val})"
+  },
+  {
+    "id": "permission_read",
+    "description": "Name of R permission",
+    "defaultMessage": "Read ({val})"
+  },
+  {
+    "id": "permission_write",
+    "description": "Name of W permission",
+    "defaultMessage": "Write ({val})"
+  },
+  {
+    "id": "permission_pres",
+    "description": "Name of P permission",
+    "defaultMessage": "Get notified ({val})"
+  },
+  {
+    "id": "permission_admin",
+    "description": "Name of A permission",
+    "defaultMessage": "Approve ({val})"
+  },
+  {
+    "id": "permission_share",
+    "description": "Name of S permission",
+    "defaultMessage": "Share ({val})"
+  },
+  {
+    "id": "permission_delete",
+    "description": "Name of D permission",
+    "defaultMessage": "Delete ({val})"
+  },
+  {
+    "id": "permission_owner",
+    "description": "Name of O permission",
+    "defaultMessage": "Owner ({val})"
+  },
+  {
+    "id": "title_permissions",
+    "description": "Section title",
+    "defaultMessage": "Permissions"
+  }
+]

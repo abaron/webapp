@@ -1,0 +1,22 @@
+[
+  {
+    "id": "messaging_disabled_prompt",
+    "description": "Prompt in SendMessage in read-only topic",
+    "defaultMessage": "Messaging disabled"
+  },
+  {
+    "id": "new_message_prompt",
+    "description": "Prompt in SendMessage in read-only topic",
+    "defaultMessage": "New message"
+  },
+  {
+    "id": "file_attachment_too_large",
+    "description": "Error message when attachment is too large",
+    "defaultMessage": "The file size {size} exceeds the {limit} limit."
+  },
+  {
+    "id": "cannot_initiate_file_upload",
+    "description": "Generic error messagewhen attachment fails",
+    "defaultMessage": "Cannot initiate file upload."
+  }
+]

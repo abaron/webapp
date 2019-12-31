@@ -1,0 +1,27 @@
+[
+  {
+    "id": "login_prompt",
+    "description": "Login placeholder in LoginView",
+    "defaultMessage": "Login"
+  },
+  {
+    "id": "password_prompt",
+    "description": "Password placeholder in LoginView",
+    "defaultMessage": "Password"
+  },
+  {
+    "id": "stay_logged_in",
+    "description": "Label for a checkbox",
+    "defaultMessage": "Stay logged in"
+  },
+  {
+    "id": "forgot_password_link",
+    "description": "Link to Reset password form",
+    "defaultMessage": "Forgot password?"
+  },
+  {
+    "id": "button_sign_in",
+    "description": "Button [Sign In]",
+    "defaultMessage": "Sign in"
+  }
+]

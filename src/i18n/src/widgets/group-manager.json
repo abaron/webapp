@@ -1,0 +1,32 @@
+[
+  {
+    "id": "no_contacts",
+    "description": "Shown in ContactsView when the user has no contacts",
+    "defaultMessage": "You have no contacts :-("
+  },
+  {
+    "id": "contacts_not_found_short",
+    "description": "Shown in ContactsView when search returned no results",
+    "defaultMessage": "No contacts match '{query}'"
+  },
+  {
+    "id": "title_group_members",
+    "description": "Section title",
+    "defaultMessage": "Group Members"
+  },
+  {
+    "id": "title_all_contacts",
+    "description": "Section title [All Contacts]",
+    "defaultMessage": "All Contacts"
+  },
+  {
+    "id": "button_ok",
+    "description": "Button [OK]",
+    "defaultMessage": "OK"
+  },
+  {
+    "id": "button_cancel",
+    "description": "Button [Cancel]",
+    "defaultMessage": "Cancel"
+  }
+]

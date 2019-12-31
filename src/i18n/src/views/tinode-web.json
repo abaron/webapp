@@ -1,0 +1,17 @@
+[
+  {
+    "id": "update_available",
+    "description": "Message shown when an app update is available.",
+    "defaultMessage": "Update available. <a href=\"\">Reload</a>."
+  },
+  {
+    "id": "reconnect_countdown",
+    "description": "Message shown when an app update is available.",
+    "defaultMessage": "Disconnected. Reconnecting in {seconds}…"
+  },
+  {
+    "id": "reconnect_now",
+    "description": "Prompt for reconnecting now",
+    "defaultMessage": "Try now"
+  }
+]

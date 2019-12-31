@@ -1,0 +1,17 @@
+[
+  {
+    "id": "error_invalid_id",
+    "description": "Error message",
+    "defaultMessage": "Invalid ID"
+  },
+  {
+    "id": "group_user_id_prompt",
+    "description": "Prompt for entering user or group ID",
+    "defaultMessage": "Group or User ID"
+  },
+  {
+    "id": "button_subscribe",
+    "description": "Button [Subscribe]",
+    "defaultMessage": "Subscribe"
+  }
+]

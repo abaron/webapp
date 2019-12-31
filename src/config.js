@@ -1,10 +1,10 @@
 import { PACKAGE_VERSION } from './version.js';
 
 // Name of this application, used in the User-Agent.
-export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.16');
+export const APP_NAME = 'AdiraChatWeb/' + (PACKAGE_VERSION || '0.16');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
-export const API_KEY = '2mCK05cKuf0xuQr7lrOLXcYLKvMUBx/PwoFBf85jIms=';
+export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 
 // The array of possible hosts to connect to.
 export const KNOWN_HOSTS = {hosted: 'adira-chat.larva.id', local: 'localhost:2096'};

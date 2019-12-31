@@ -1,0 +1,16 @@
+[
+  {
+    "id": "tags_not_found",
+    "defaultMessage": "No tags defined. Add some."
+  },
+  {
+    "id": "tags_editor_no_tags",
+    "description": "Tag editor prompt when no tags are found.",
+    "defaultMessage": "Add some tags"
+  },
+  {
+    "id": "title_manage_tags",
+    "description": "Section title for the list of tags",
+    "defaultMessage": "Manage"
+  }
+]

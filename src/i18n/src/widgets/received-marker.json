@@ -1,0 +1,12 @@
+[
+  {
+    "id": "message_sending",
+    "description": "Message being sent, in place of time stamp",
+    "defaultMessage": "sending..."
+  },
+  {
+    "id": "message_sending_failed",
+    "description": "Failed to send message, in place of time stamp",
+    "defaultMessage": "failed"
+  }
+]

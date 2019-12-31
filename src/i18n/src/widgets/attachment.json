@@ -1,0 +1,7 @@
+[
+  {
+    "id": "save_attachment",
+    "description": "Call to save an attachment",
+    "defaultMessage": "save"
+  }
+]

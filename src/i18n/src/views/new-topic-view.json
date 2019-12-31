@@ -1,0 +1,27 @@
+[
+  {
+    "id": "search_for_contacts",
+    "description": "Text shown in contacts view when user entered no search query.",
+    "defaultMessage": "Use search to find contacts"
+  },
+  {
+    "id": "search_no_results",
+    "description": "Text shown in contacts view when query returned no results.",
+    "defaultMessage": "Search returned no results"
+  },
+  {
+    "id": "tabtitle_find_user",
+    "description": "Tab title Find",
+    "defaultMessage": "find"
+  },
+  {
+    "id": "tabtitle_new_group",
+    "description": "Tab title New Group",
+    "defaultMessage": "new group"
+  },
+  {
+    "id": "tabtitle_group_by_id",
+    "description": "Tab title Find topic by ID",
+    "defaultMessage": "by id"
+  }
+]

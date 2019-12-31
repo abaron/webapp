@@ -3223,6 +3223,7 @@ Tinode.prototype = {
 
       pkt.acc.token = params.token;
     }
+    console.log(pkt)
 
     return this.send(pkt, pkt.acc.id);
   },

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "archived_contacts",
+    "description": "Label for archived chats",
+    "defaultMessage": "Archived contacts ({count})"
+  },
+  {
+    "id": "contacts_not_found",
+    "description": "HTML message shown in ContactList when no contacts are found",
+    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯"
+  }
+]

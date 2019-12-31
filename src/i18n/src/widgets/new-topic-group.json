@@ -1,0 +1,12 @@
+[
+  {
+    "id": "topic_name_editing_placeholder",
+    "description": "Prompt for entering topic name",
+    "defaultMessage": "Freeform name of the group"
+  },
+  {
+    "id": "button_create",
+    "description": "Button [Create]",
+    "defaultMessage": "Create"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "menu_item_info",
+    "description": "Show extended topic information",
+    "defaultMessage": "Info"
+  },
+  {
+    "id": "menu_item_clear_messages",
+    "description": "Delete all messages",
+    "defaultMessage": "Clear messages"
+  },
+  {
+    "id": "menu_item_clear_messages_for_all",
+    "description": "Delete all message(s) for all members",
+    "defaultMessage": "Clear for All"
+  },
+  {
+    "id": "menu_item_delete",
+    "description": "Delete selected messages",
+    "defaultMessage": "Delete"
+  },
+  {
+    "id": "menu_item_delete_for_all",
+    "description": "Delete selected message(s) for all members",
+    "defaultMessage": "Delete for All"
+  },
+  {
+    "id": "menu_item_mute",
+    "description": "Turn off notifications",
+    "defaultMessage": "Mute"
+  },
+  {
+    "id": "menu_item_unmute",
+    "description": "Turn notifications on",
+    "defaultMessage": "Unmute"
+  },
+  {
+    "id": "menu_item_delete_topic",
+    "description": "Delete entire topic",
+    "defaultMessage": "Delete"
+  },
+  {
+    "id": "topic_delete_warning",
+    "description": "Alert warning when deleting entire topic",
+    "defaultMessage": "Are you sure you want to delete this conversation?"
+  },
+  {
+    "id": "menu_item_unblock",
+    "description": "Unblock topic or user",
+    "defaultMessage": "Unblock"
+  },
+  {
+    "id": "menu_item_block",
+    "description": "Block topic or user",
+    "defaultMessage": "Block"
+  },
+  {
+    "id": "topic_block_warning",
+    "description": "Alert warning when blocking a topic.",
+    "defaultMessage": "Are you sure you want to block this conversation?"
+  },
+  {
+    "id": "menu_item_member_delete",
+    "description": "Remove user from topic",
+    "defaultMessage": "Remove"
+  },
+  {
+    "id": "menu_item_archive_topic",
+    "description": "Move topic from the list of active chats to archive",
+    "defaultMessage": "Archive"
+  }
+]

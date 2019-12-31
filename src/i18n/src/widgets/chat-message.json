@@ -1,0 +1,17 @@
+[
+  {
+    "id": "deleted_content",
+    "description": "Shown when messages are deleted",
+    "defaultMessage": "content deleted"
+  },
+  {
+    "id": "invalid_content",
+    "description": "Shown when message is unreadable",
+    "defaultMessage": "invalid content"
+  },
+  {
+    "id": "user_not_found",
+    "description": "In place of a user's full name when the user is not found.",
+    "defaultMessage": "Not found"
+  }
+]

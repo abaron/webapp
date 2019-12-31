@@ -1,0 +1,17 @@
+[
+  {
+    "id": "full_name_prompt",
+    "description": "Input placeholder for person's full name",
+    "defaultMessage": "Full name, e.g. John Doe"
+  },
+  {
+    "id": "email_prompt",
+    "description": "Input placeholder for email entry",
+    "defaultMessage": "Email, e.g. jdoe@example.com"
+  },
+  {
+    "id": "button_sign_up",
+    "description": "Create account button [Sign Up]",
+    "defaultMessage": "Sign up"
+  }
+]

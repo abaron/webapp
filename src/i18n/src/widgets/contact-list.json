@@ -1,0 +1,12 @@
+[
+  {
+    "id": "badge_you",
+    "description": "Badge for indicating the current user",
+    "defaultMessage": "you"
+  },
+  {
+    "id": "badge_owner",
+    "description": "Badge for indicating the owner",
+    "defaultMessage": "owner"
+  }
+]

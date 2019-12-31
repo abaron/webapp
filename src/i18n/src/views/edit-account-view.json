@@ -1,0 +1,82 @@
+[
+  {
+    "id": "validate_credential_action",
+    "description": "Validate credentail call to action",
+    "defaultMessage": "confirm"
+  },
+  {
+    "id": "label_your_name",
+    "description": "Label for full name editing",
+    "defaultMessage": "Your name"
+  },
+  {
+    "id": "label_password",
+    "description": "Label for password editing",
+    "defaultMessage": "Password"
+  },
+  {
+    "id": "password_unchanged_prompt",
+    "description": "Message in editor while password is unchanged",
+    "defaultMessage": "Unchanged"
+  },
+  {
+    "id": "label_message_sound",
+    "description": "Label for message sounds toggle",
+    "defaultMessage": "Message sound:"
+  },
+  {
+    "id": "label_push_notifications",
+    "description": "Label for push notifications switch",
+    "defaultMessage": "Notification alerts:"
+  },
+  {
+    "id": "label_push_notifications_disabled",
+    "description": "Label for push notifications switch",
+    "defaultMessage": "Notification alerts (requires HTTPS):"
+  },
+  {
+    "id": "title_tag_manager",
+    "description": "Section title for TagManager",
+    "defaultMessage": "Tags (user discovery)"
+  },
+  {
+    "id": "label_user_contacts",
+    "description": "Label for user contacts",
+    "defaultMessage": "Contacts:"
+  },
+  {
+    "id": "label_user_id",
+    "description": "Label for user address (ID)",
+    "defaultMessage": "Address:"
+  },
+  {
+    "id": "label_default_access_mode",
+    "description": "Label for default access mode",
+    "defaultMessage": "Default access mode:"
+  },
+  {
+    "id": "button_logout",
+    "description": "Button [Logout]",
+    "defaultMessage": "Logout"
+  },
+  {
+    "id": "label_legal",
+    "description": "Section label",
+    "defaultMessage": "Legal"
+  },
+  {
+    "id": "link_contact_us",
+    "description": "Ancor text for contacting us by email",
+    "defaultMessage": "Contact Us"
+  },
+  {
+    "id": "link_terms_of_service",
+    "description": "Ancor text for terms of service link",
+    "defaultMessage": "Terms of Service"
+  },
+  {
+    "id": "link_privacy_policy",
+    "description": "Ancor text for privacy policy link",
+    "defaultMessage": "Privacy Policy"
+  }
+]

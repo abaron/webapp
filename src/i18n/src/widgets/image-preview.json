@@ -1,0 +1,22 @@
+[
+  {
+    "id": "download_action",
+    "description": "Call to action [download]",
+    "defaultMessage": "download"
+  },
+  {
+    "id": "label_file_name",
+    "description": "Label for a file name",
+    "defaultMessage": "File name:"
+  },
+  {
+    "id": "label_content_type",
+    "description": "Label for file content type (mime)",
+    "defaultMessage": "Content type:"
+  },
+  {
+    "id": "label_size",
+    "description": "Label for file size",
+    "defaultMessage": "Size:"
+  }
+]

@@ -1,0 +1,137 @@
+[
+  {
+    "id": "requested_permissions",
+    "description": "Title for permissions",
+    "defaultMessage": "Requested"
+  },
+  {
+    "id": "granted_permissions",
+    "description": "Title for permissions",
+    "defaultMessage": "Granted"
+  },
+  {
+    "id": "menu_item_edit_permissions",
+    "description": "Menu item [Edit permissions]",
+    "defaultMessage": "Edit permissions"
+  },
+  {
+    "id": "label_other_user",
+    "description": "Label for the other user when the user is unnamed",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "action_clear_messages",
+    "description": "Flat button [Clear Messages] (soft-delete messages)",
+    "defaultMessage": "Clear Messages"
+  },
+  {
+    "id": "clear_messages_warning",
+    "description": "Alert dialog warning when deleting all messages.",
+    "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone."
+  },
+  {
+    "id": "action_delete_messages",
+    "description": "Flat button [Clear for All] (hard-delete all messages)",
+    "defaultMessage": "Clear Messages for All"
+  },
+  {
+    "id": "delete_messages_warning",
+    "description": "Alert dialog warning when hard-deleting all messages.",
+    "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone."
+  },
+  {
+    "id": "action_leave_chat",
+    "description": "Flat button [Leave Conversation]",
+    "defaultMessage": "Leave Conversation"
+  },
+  {
+    "id": "leave_chat_warning",
+    "description": "Alert dialog warning when unsubscribing from a chat.",
+    "defaultMessage": "Are you sure you want to leave this conversation?"
+  },
+  {
+    "id": "action_block_contact",
+    "description": "Flat button [Block Contact]",
+    "defaultMessage": "Block Contact"
+  },
+  {
+    "id": "block_contact_warning",
+    "description": "Alert dialog warning when blocking a contact.",
+    "defaultMessage": "Are you sure you want to block this contact?"
+  },
+  {
+    "id": "action_report_chat",
+    "description": "Flat button [Report Group]",
+    "defaultMessage": "Report Conversation"
+  },
+  {
+    "id": "report_chat_warning",
+    "description": "Alert dialog warning when reporting a conversation for abuse",
+    "defaultMessage": "Are you sure you want to block and report this conversation?"
+  },
+  {
+    "id": "title_info",
+    "description": "Title for InfoView",
+    "defaultMessage": "Info"
+  },
+  {
+    "id": "label_topic_name",
+    "description": "Label for editing topic name",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "label_private",
+    "description": "Label for editing 'private'",
+    "defaultMessage": "Private comment"
+  },
+  {
+    "id": "private_editing_placeholder",
+    "description": "Placeholder for editing 'private'",
+    "defaultMessage": "Visible to you only"
+  },
+  {
+    "id": "label_muting_topic",
+    "description": "Label for Muting/unmuting the topic",
+    "defaultMessage": "Muted:"
+  },
+  {
+    "id": "action_more",
+    "description": "Action for showing more content",
+    "defaultMessage": "More"
+  },
+  {
+    "id": "label_your_permissions",
+    "description": "Label for current user permissions",
+    "defaultMessage": "Your permissions:"
+  },
+  {
+    "id": "label_permissions",
+    "description": "Section title",
+    "defaultMessage": "Permissions:"
+  },
+  {
+    "id": "label_you",
+    "description": "Label for the current user",
+    "defaultMessage": "You:"
+  },
+  {
+    "id": "label_default_access",
+    "description": "Section title",
+    "defaultMessage": "Default access mode:"
+  },
+  {
+    "id": "label_group_members",
+    "description": "Section title or label",
+    "defaultMessage": "Group members:"
+  },
+  {
+    "id": "button_add_members",
+    "description": "Flat button [Add members] (to topic)",
+    "defaultMessage": "Add members"
+  },
+  {
+    "id": "group_has_no_members",
+    "description": "Shown in place of group members",
+    "defaultMessage": "No members"
+  }
+]
