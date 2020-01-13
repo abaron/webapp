@@ -4,7 +4,7 @@ import { PACKAGE_VERSION } from './version.js';
 export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.16');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
-export const API_KEY = '2mCK05cKuf0xuQr7lrOLXcYLKvMUBx/PwoFBf85jIms=';
+export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 
 // The array of possible hosts to connect to.
 export const KNOWN_HOSTS = {hosted: 'adira-chat.larva.id', local: 'localhost:2096'};
@@ -80,3 +80,9 @@ export const LINK_PRIVACY_POLICY = 'https://larva.id/privacy.html';
 
 // Link to Terms of Service.
 export const LINK_TERMS_OF_SERVICE = 'https://larva.id/terms.html';
+
+// Link to Chat LDAP
+export const LINK_CHAT_LDAP = 'http://adira.larva.id:8000'
+
+// Client id of chat LDAP
+export const CHAT_LDAP_CLIENT_ID = 'haJC06iWqsC5KThtpHEI'
