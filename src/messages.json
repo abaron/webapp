@@ -75,7 +75,7 @@
     "label_server_to_use": "Server to use:",
     "label_wire_transport": "Wire transport:",
     "button_update": "Update",
-    "sidepanel_title_login": "Sign In",
+    "sidepanel_title_login": " ",
     "sidepanel_title_register": "Create Account",
     "sidepanel_title_settings": "Settings",
     "sidepanel_title_edit_account": "Edit Account",
