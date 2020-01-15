@@ -92,12 +92,6 @@ class NewTopicView extends React.Component {
                 description="Tab title New Group" />
             </a>
           </li>
-          <li className={this.state.tabSelected === "byid" ? "active" : null}>
-            <a href="#" data-id="byid" onClick={this.handleTabClick}>
-              <FormattedMessage id="tabtitle_group_by_id" defaultMessage="by id"
-                description="Tab title Find topic by ID" />
-            </a>
-          </li>
         </ul>
         {this.state.tabSelected === 'grp' ?
           <NewTopicGroup onSubmit={this.handleNewGroupSubmit} /> :
