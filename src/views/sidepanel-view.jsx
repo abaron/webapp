@@ -19,7 +19,7 @@ const messages = defineMessages({
   'login': {
     id: 'sidepanel_title_login',
     description: 'Sidepanel title for LoginView.',
-    defaultMessage: 'Sign In'
+    defaultMessage: ' '
   },
   'register': {
     id: 'sidepanel_title_register',

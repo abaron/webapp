@@ -1096,7 +1096,7 @@ class TinodeWeb extends React.Component {
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
-    HashNavigation.navigateTo('');
+    window.location = '/';
   }
 
   handleDeleteMessagesRequest(topicName) {

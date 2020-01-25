@@ -197,19 +197,6 @@ export default class EditAccountView extends React.Component {
                   value={this.state.fullName}
                   onFinished={this.handleFullNameUpdate} />
               }</FormattedMessage></div>
-              <div><label className="small">
-                <FormattedMessage id="label_password" defaultMessage="Password"
-                  description="Label for password editing" />
-              </label></div>
-              <div>
-                <FormattedMessage id="password_unchanged_prompt" defaultMessage="Unchanged"
-                  description="Message in editor while password is unchanged">{
-                  (password_unchanged) => <InPlaceEdit
-                    placeholder={password_unchanged}
-                    type="password"
-                    onFinished={this.handlePasswordUpdate} />
-                }</FormattedMessage>
-              </div>
             </div>
             <AvatarUpload
               avatar={this.state.avatar}

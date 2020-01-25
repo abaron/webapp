@@ -80,3 +80,9 @@ export const LINK_PRIVACY_POLICY = 'https://larva.id/privacy.html';
 
 // Link to Terms of Service.
 export const LINK_TERMS_OF_SERVICE = 'https://larva.id/terms.html';
+
+// Link to Chat LDAP
+export const LINK_CHAT_LDAP = 'https://adira.larva.id'
+
+// Client id of chat LDAP
+export const CHAT_LDAP_CLIENT_ID = 'haJC06iWqsC5KThtpHEI'

@@ -22,6 +22,6 @@
   {
     "id": "button_sign_in",
     "description": "Button [Sign In]",
-    "defaultMessage": "Sign in"
+    "defaultMessage": ""
   }
 ]

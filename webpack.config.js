@@ -35,7 +35,7 @@ module.exports = (env, argv) => {
             compress: true,
             mangle: true
           },
-          sourceMap: true
+          sourceMap: false
         })
       ]
     },
