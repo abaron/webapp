@@ -18,10 +18,5 @@
     "id": "tabtitle_new_group",
     "description": "Tab title New Group",
     "defaultMessage": "new group"
-  },
-  {
-    "id": "tabtitle_group_by_id",
-    "description": "Tab title Find topic by ID",
-    "defaultMessage": "by id"
   }
 ]

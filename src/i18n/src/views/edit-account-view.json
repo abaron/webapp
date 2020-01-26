@@ -10,16 +10,6 @@
     "defaultMessage": "Your name"
   },
   {
-    "id": "label_password",
-    "description": "Label for password editing",
-    "defaultMessage": "Password"
-  },
-  {
-    "id": "password_unchanged_prompt",
-    "description": "Message in editor while password is unchanged",
-    "defaultMessage": "Unchanged"
-  },
-  {
     "id": "label_message_sound",
     "description": "Label for message sounds toggle",
     "defaultMessage": "Message sound:"

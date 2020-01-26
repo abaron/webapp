@@ -6,8 +6,13 @@
   },
   {
     "id": "new_message_prompt",
-    "description": "Prompt in SendMessage in read-only topic",
+    "description": "Prompt in send message field",
     "defaultMessage": "New message"
+  },
+  {
+    "id": "image_caption_prompt",
+    "description": "Prompt in SendMessage for attached image",
+    "defaultMessage": "Image caption"
   },
   {
     "id": "file_attachment_too_large",

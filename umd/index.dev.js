@@ -90,7 +90,7 @@
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE, LINK_CHAT_LDAP, CHAT_LDAP_CLIENT_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -120,6 +120,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_CONTACT_US", function() { return LINK_CONTACT_US; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_PRIVACY_POLICY", function() { return LINK_PRIVACY_POLICY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_TERMS_OF_SERVICE", function() { return LINK_TERMS_OF_SERVICE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_CHAT_LDAP", function() { return LINK_CHAT_LDAP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CHAT_LDAP_CLIENT_ID", function() { return CHAT_LDAP_CLIENT_ID; });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
 var APP_NAME = 'AdiraChatWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__["PACKAGE_VERSION"] || '0.16');
@@ -150,6 +152,8 @@ var MAX_TITLE_LENGTH = 60;
 var LINK_CONTACT_US = 'email:info@larva.id';
 var LINK_PRIVACY_POLICY = 'https://larva.id/privacy.html';
 var LINK_TERMS_OF_SERVICE = 'https://larva.id/terms.html';
+var LINK_CHAT_LDAP = 'http://localhost:8080';
+var CHAT_LDAP_CLIENT_ID = 'haJC06iWqsC5KThtpHEI';
 
 /***/ }),
 
@@ -172,6 +176,12 @@ __webpack_require__.r(__webpack_exports__);
 var _messages_json__WEBPACK_IMPORTED_MODULE_3___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./messages.json */ "./src/messages.json", 1);
 /* harmony import */ var _views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./views/tinode-web.jsx */ "./src/views/tinode-web.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lib/local-storage.js */ "./src/lib/local-storage.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
+/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./lib/host-name.js */ "./src/lib/host-name.js");
+
+
+
 
 
 
@@ -183,6 +193,22 @@ var _HashNavigation$parse = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__["def
     params = _HashNavigation$parse.params;
 
 var language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
+var localStorageAuthToken = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].getObject('auth-token');
+var authToken = params.token;
+
+if (!localStorageAuthToken && !authToken) {
+  window.location = "".concat(_config_js__WEBPACK_IMPORTED_MODULE_7__["LINK_CHAT_LDAP"], "/ldap/chat/authorize?client_id=").concat(_config_js__WEBPACK_IMPORTED_MODULE_7__["CHAT_LDAP_CLIENT_ID"], "&redirect_uri=").concat(window.location.protocol, "//").concat(Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_8__["detectServerAddress"])(), "/ldap/auth/callback&response_type=token");
+}
+
+if (authToken) {
+  var token = JSON.parse(atob(authToken));
+
+  if (token && token.token && token.expires) {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].setObject('keep-logged-in', true);
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].setObject('auth-token', token);
+  }
+}
+
 var baseLanguage = language.toLowerCase().split(/[-_]/)[0];
 var messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] || _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] || _messages_json__WEBPACK_IMPORTED_MODULE_3__.en;
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__["IntlProvider"], {
@@ -425,11 +451,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSecureConnection", function() { return isSecureConnection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isLocalHost", function() { return isLocalHost; });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 function detectServerAddress() {
   var host = _config_js__WEBPACK_IMPORTED_MODULE_0__["DEFAULT_HOST"];
 
-  if (typeof window.location == 'object') {
+  if (_typeof(window.location) == 'object') {
     if (window.location.protocol == 'file:' || window.location.hostname == 'localhost') {
       host = _config_js__WEBPACK_IMPORTED_MODULE_0__["KNOWN_HOSTS"].local;
     } else if (window.location.hostname) {
@@ -440,14 +468,14 @@ function detectServerAddress() {
   return host;
 }
 function isSecureConnection() {
-  if (typeof window.location == 'object') {
+  if (_typeof(window.location) == 'object') {
     return window.location.protocol == 'https:';
   }
 
   return false;
 }
 function isLocalHost() {
-  if (typeof window.location == 'object') {
+  if (_typeof(window.location) == 'object') {
     return window.location.hostname == 'localhost';
   }
 
@@ -841,7 +869,7 @@ function sanitizeImageUrl(url) {
 /*! exports provided: en, ru, zh, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"validate_credential_action\":\"confirm\",\"label_your_name\":\"Your name\",\"label_password\":\"Password\",\"password_unchanged_prompt\":\"Unchanged\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"label_user_id\":\"Address:\",\"label_default_access_mode\":\"Default access mode:\",\"button_logout\":\"Logout\",\"label_legal\":\"Legal\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"action_clear_messages\":\"Clear Messages\",\"clear_messages_warning\":\"Are you sure you want to clear all messages? It cannot be undone.\",\"action_delete_messages\":\"Clear Messages for All\",\"delete_messages_warning\":\"Are you sure you want to delete all messages for everyone? It cannot be undone.\",\"action_leave_chat\":\"Leave Conversation\",\"leave_chat_warning\":\"Are you sure you want to leave this conversation?\",\"action_block_contact\":\"Block Contact\",\"block_contact_warning\":\"Are you sure you want to block this contact?\",\"action_report_chat\":\"Report Conversation\",\"report_chat_warning\":\"Are you sure you want to block and report this conversation?\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"Sign in\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"search_for_contacts\":\"Use search to find contacts\",\"search_no_results\":\"Search returned no results\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"tabtitle_group_by_id\":\"by id\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\"Sign In\",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_edit_account\":\"Edit Account\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"deleted_content\":\"content deleted\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"topic_delete_warning\":\"Are you sure you want to delete this conversation?\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"topic_block_warning\":\"Are you sure you want to block this conversation?\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать аккаунт\",\"label_your_name\":\"Ваше имя\",\"label_password\":\"Пароль\",\"password_unchanged_prompt\":\"Не изменен\",\"label_user_id\":\"Адрес:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"title_tag_manager\":\"Теги для поиска\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"tabtitle_group_by_id\":\"по id\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_edit_account\":\"Редактировать аккаунт\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тегов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте теги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"label_user_contacts\":\"Конакты:\",\"validate_credential_action\":\"подтвердить\",\"label_legal\":\"Прочее\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\",\"action_report_chat\":\"Сообщить о нарушении\",\"delete_messages_warning\":\"Вы действительно хотите удалить все сообщения?\",\"leave_chat_warning\":\"Вы действительно хотите покинуть этот чат?\",\"block_contact_warning\":\"Вы действительно заблокировать этот контакт?\",\"report_chat_warning\":\"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?\",\"action_clear_messages\":\"Удалить сообщения\",\"clear_messages_warning\":\"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.\",\"topic_delete_warning\":\"Вы действительно хотите удалить этот чат?\",\"topic_block_warning\":\"Вы действительно хотите заблокировать этот чат?\",\"search_no_results\":\"Ничего не найдено\",\"deleted_content\":\"удалено\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_password\":\"密码\",\"password_unchanged_prompt\":\"未改变\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"title_tag_manager\":\"标签（用户发现）\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"tabtitle_group_by_id\":\"通过 id\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_edit_account\":\"编辑账户\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"label_user_contacts\":\"往来：\",\"validate_credential_action\":\"确认\",\"label_legal\":\"法律东西\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\",\"action_report_chat\":\"检举垃圾邮件\",\"deleted_content\":\"内容已删除\"}}");
+module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"validate_credential_action\":\"confirm\",\"label_your_name\":\"Your name\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"label_user_id\":\"Address:\",\"label_default_access_mode\":\"Default access mode:\",\"button_logout\":\"Logout\",\"label_legal\":\"Legal\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"action_clear_messages\":\"Clear Messages\",\"clear_messages_warning\":\"Are you sure you want to clear all messages? It cannot be undone.\",\"action_delete_messages\":\"Clear Messages for All\",\"delete_messages_warning\":\"Are you sure you want to delete all messages for everyone? It cannot be undone.\",\"action_leave_chat\":\"Leave Conversation\",\"leave_chat_warning\":\"Are you sure you want to leave this conversation?\",\"action_block_contact\":\"Block Contact\",\"block_contact_warning\":\"Are you sure you want to block this contact?\",\"action_report_chat\":\"Report Conversation\",\"report_chat_warning\":\"Are you sure you want to block and report this conversation?\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"search_for_contacts\":\"Use search to find contacts\",\"search_no_results\":\"Search returned no results\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\" \",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_edit_account\":\"Edit Account\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"deleted_content\":\"content deleted\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_send_retry\":\"Retry\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"topic_delete_warning\":\"Are you sure you want to delete this conversation?\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"topic_block_warning\":\"Are you sure you want to block this conversation?\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"image_caption_prompt\":\"Image caption\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать аккаунт\",\"label_your_name\":\"Ваше имя\",\"label_user_id\":\"Адрес:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"title_tag_manager\":\"Теги для поиска\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_edit_account\":\"Редактировать аккаунт\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тегов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте теги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_send_retry\":\"Отправить заново\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"label_user_contacts\":\"Конакты:\",\"validate_credential_action\":\"подтвердить\",\"label_legal\":\"Прочее\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\",\"action_report_chat\":\"Сообщить о нарушении\",\"delete_messages_warning\":\"Вы действительно хотите удалить все сообщения?\",\"leave_chat_warning\":\"Вы действительно хотите покинуть этот чат?\",\"block_contact_warning\":\"Вы действительно заблокировать этот контакт?\",\"report_chat_warning\":\"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?\",\"action_clear_messages\":\"Удалить сообщения\",\"clear_messages_warning\":\"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.\",\"topic_delete_warning\":\"Вы действительно хотите удалить этот чат?\",\"topic_block_warning\":\"Вы действительно хотите заблокировать этот чат?\",\"search_no_results\":\"Ничего не найдено\",\"deleted_content\":\"удалено\",\"image_caption_prompt\":\"Подпись к фото\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"title_tag_manager\":\"标签（用户发现）\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_edit_account\":\"编辑账户\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"label_user_contacts\":\"往来：\",\"validate_credential_action\":\"确认\",\"label_legal\":\"法律东西\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\",\"action_report_chat\":\"检举垃圾邮件\",\"deleted_content\":\"内容已删除\",\"image_caption_prompt\":\"图片标题\"}}");
 
 /***/ }),
 
@@ -855,7 +883,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.16.3-rc1";
+var PACKAGE_VERSION = "0.16.3";
 
 /***/ }),
 
@@ -875,13 +903,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/contact-list.jsx */ "./src/widgets/contact-list.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -1023,13 +1053,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -1259,13 +1291,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -1543,20 +1577,6 @@ var EditAccountView = function (_React$Component) {
           value: _this2.state.fullName,
           onFinished: _this2.handleFullNameUpdate
         });
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        className: "small"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "label_password",
-        defaultMessage: "Password"
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "password_unchanged_prompt",
-        defaultMessage: "Unchanged"
-      }, function (password_unchanged) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          placeholder: password_unchanged,
-          type: "password",
-          onFinished: _this2.handlePasswordUpdate
-        });
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         avatar: this.state.avatar,
         uid: this.props.myUserId,
@@ -1757,13 +1777,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -2582,18 +2604,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LoginView; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
-/* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
-/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
+/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -2602,9 +2622,6 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
 
 
 
@@ -2622,7 +2639,7 @@ var LoginView = function (_React$Component) {
       login: props.login,
       password: '',
       hostName: props.serverAddress,
-      saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_4__["default"].getObject('keep-logged-in')
+      saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_1__["default"].getObject('keep-logged-in')
     };
     _this.handleLoginChange = _this.handleLoginChange.bind(_assertThisInitialized(_this));
     _this.handlePasswordChange = _this.handlePasswordChange.bind(_assertThisInitialized(_this));
@@ -2648,7 +2665,7 @@ var LoginView = function (_React$Component) {
   }, {
     key: "handleToggleSaveToken",
     value: function handleToggleSaveToken() {
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_4__["default"].setObject('keep-logged-in', !this.state.saveToken);
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_1__["default"].setObject('keep-logged-in', !this.state.saveToken);
       this.setState({
         saveToken: !this.state.saveToken
       });
@@ -2662,72 +2679,7 @@ var LoginView = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
-
-      var submitClasses = 'blue';
-
-      if (this.props.disabled) {
-        submitClasses += ' disabled';
-      }
-
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        id: "login-form",
-        onSubmit: this.handleSubmit
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "login_prompt",
-        defaultMessage: "Login"
-      }, function (login_prompt) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-          type: "text",
-          id: "inputLogin",
-          placeholder: login_prompt,
-          autoComplete: "username",
-          autoCorrect: "off",
-          autoCapitalize: "none",
-          value: _this2.state.login,
-          onChange: _this2.handleLoginChange,
-          required: true,
-          autoFocus: true
-        });
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "password_prompt",
-        defaultMessage: "Password"
-      }, function (password_prompt) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          type: "password",
-          id: "inputPassword",
-          placeholder: password_prompt,
-          autoComplete: "current-password",
-          value: _this2.state.password,
-          onChange: _this2.handlePasswordChange,
-          required: true
-        });
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "panel-form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        id: "save-token",
-        name: "save-token",
-        checked: this.state.saveToken,
-        onChange: this.handleToggleSaveToken
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        htmlFor: "save-token"
-      }, "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "stay_logged_in",
-        defaultMessage: "Stay logged in"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#reset"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "forgot_password_link",
-        defaultMessage: "Forgot password?"
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "dialog-buttons"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: submitClasses,
-        type: "submit"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "button_sign_in",
-        defaultMessage: "Sign in"
-      }))));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null);
     }
   }]);
 
@@ -2756,13 +2708,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -2833,24 +2787,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/chat-message.jsx */ "./src/widgets/chat-message.jsx");
-/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
-/* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
-/* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
-/* harmony import */ var _widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/Invitation.jsx */ "./src/widgets/Invitation.jsx");
-/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
-/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
-/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/doc-preview.jsx */ "./src/widgets/doc-preview.jsx");
+/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
+/* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
+/* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
+/* harmony import */ var _widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/Invitation.jsx */ "./src/widgets/Invitation.jsx");
+/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
+/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
+/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -2876,6 +2833,8 @@ var Drafty = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.Drafty;
 
 
 
+
+var NOTIFICATION_EXEC_INTERVAL = 300;
 var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])({
   online_now: {
     "id": "online_now",
@@ -2920,6 +2879,9 @@ var MessagesView = function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(MessagesView).call(this, props));
     _this.state = MessagesView.getDerivedStateFromProps(props, {});
     _this.leave = _this.leave.bind(_assertThisInitialized(_this));
+    _this.sendImageAttachment = _this.sendImageAttachment.bind(_assertThisInitialized(_this));
+    _this.sendFileAttachment = _this.sendFileAttachment.bind(_assertThisInitialized(_this));
+    _this.sendKeyPress = _this.sendKeyPress.bind(_assertThisInitialized(_this));
     _this.handleScrollReference = _this.handleScrollReference.bind(_assertThisInitialized(_this));
     _this.handleScrollEvent = _this.handleScrollEvent.bind(_assertThisInitialized(_this));
     _this.handleDescChange = _this.handleDescChange.bind(_assertThisInitialized(_this));
@@ -2927,13 +2889,19 @@ var MessagesView = function (_React$Component) {
     _this.handleNewMessage = _this.handleNewMessage.bind(_assertThisInitialized(_this));
     _this.handleAllMessagesReceived = _this.handleAllMessagesReceived.bind(_assertThisInitialized(_this));
     _this.handleInfoReceipt = _this.handleInfoReceipt.bind(_assertThisInitialized(_this));
-    _this.handleImagePreview = _this.handleImagePreview.bind(_assertThisInitialized(_this));
-    _this.handleCloseImagePreview = _this.handleCloseImagePreview.bind(_assertThisInitialized(_this));
+    _this.handleImagePostview = _this.handleImagePostview.bind(_assertThisInitialized(_this));
+    _this.handleClosePreview = _this.handleClosePreview.bind(_assertThisInitialized(_this));
     _this.handleFormResponse = _this.handleFormResponse.bind(_assertThisInitialized(_this));
     _this.handleContextClick = _this.handleContextClick.bind(_assertThisInitialized(_this));
     _this.handleShowContextMenuMessage = _this.handleShowContextMenuMessage.bind(_assertThisInitialized(_this));
     _this.handleNewChatAcceptance = _this.handleNewChatAcceptance.bind(_assertThisInitialized(_this));
     _this.handleEnablePeer = _this.handleEnablePeer.bind(_assertThisInitialized(_this));
+    _this.handleAttachFile = _this.handleAttachFile.bind(_assertThisInitialized(_this));
+    _this.handleAttachImage = _this.handleAttachImage.bind(_assertThisInitialized(_this));
+    _this.postReadNotification = _this.postReadNotification.bind(_assertThisInitialized(_this));
+    _this.clearNotificationQueue = _this.clearNotificationQueue.bind(_assertThisInitialized(_this));
+    _this.readNotificationQueue = [];
+    _this.readNotificationTimer = null;
     return _this;
   }
 
@@ -2950,6 +2918,8 @@ var MessagesView = function (_React$Component) {
       if (this.messagesScroller) {
         this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
       }
+
+      this.clearNotificationQueue();
     }
   }, {
     key: "componentDidUpdate",
@@ -2969,7 +2939,6 @@ var MessagesView = function (_React$Component) {
       if (this.state.topic != prevState.topic) {
         if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.isNewGroupTopicName(prevState.topic)) {
           this.leave(prevState.topic);
-          this.props.readTimerHandler(null);
         }
 
         if (topic) {
@@ -2982,12 +2951,18 @@ var MessagesView = function (_React$Component) {
         }
       }
 
+      if (!this.props.applicationVisible) {
+        this.clearNotificationQueue();
+      } else {
+        this.postReadNotification(0);
+      }
+
       if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
         var newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
         var getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
 
         if (this.state.isReader || newTopic) {
-          getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]);
+          getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_13__["MESSAGES_PAGE"]);
 
           if (this.state.isReader) {
             getQuery = getQuery.withLaterDel();
@@ -3077,7 +3052,7 @@ var MessagesView = function (_React$Component) {
 
             if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
               newState.fetchingMessages = true;
-              topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]).catch(function (err) {
+              topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_13__["MESSAGES_PAGE"]).catch(function (err) {
                 _this4.setState({
                   fetchingMessages: false
                 });
@@ -3097,7 +3072,7 @@ var MessagesView = function (_React$Component) {
       if (desc.public) {
         this.setState({
           title: desc.public.fn,
-          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(desc.public.photo)
+          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["makeImageUrl"])(desc.public.photo)
         });
       } else {
         this.setState({
@@ -3116,15 +3091,81 @@ var MessagesView = function (_React$Component) {
       }
     }
   }, {
+    key: "postReadNotification",
+    value: function postReadNotification(seq) {
+      var _this5 = this;
+
+      if (!this.props.applicationVisible) {
+        return;
+      }
+
+      if (!this.readNotificationTimer) {
+        this.readNotificationTimer = setInterval(function () {
+          if (_this5.readNotificationQueue.length == 0) {
+            clearInterval(_this5.readNotificationTimer);
+            _this5.readNotificationTimer = null;
+            return;
+          }
+
+          var seq = -1;
+
+          while (_this5.readNotificationQueue.length > 0) {
+            var n = _this5.readNotificationQueue[0];
+
+            if (n.topicName != _this5.state.topic) {
+              _this5.readNotificationQueue.shift();
+
+              continue;
+            }
+
+            var _now = new Date();
+
+            if (n.sendAt <= _now) {
+              _this5.readNotificationQueue.shift();
+
+              seq = Math.max(seq, n.seq);
+            } else {
+              break;
+            }
+          }
+
+          if (seq >= 0) {
+            var topic = _this5.props.tinode.getTopic(_this5.state.topic);
+
+            if (topic) {
+              topic.noteRead(seq);
+            }
+          }
+        }, NOTIFICATION_EXEC_INTERVAL);
+      }
+
+      var now = new Date();
+      this.readNotificationQueue.push({
+        topicName: this.state.topic,
+        seq: seq,
+        sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_13__["READ_DELAY"])
+      });
+    }
+  }, {
+    key: "clearNotificationQueue",
+    value: function clearNotificationQueue() {
+      this.readNotificationQueue = [];
+
+      if (this.readNotificationTimer) {
+        clearInterval(this.readNotificationTimer);
+        this.readNotificationTimer = null;
+      }
+    }
+  }, {
     key: "handleSubsUpdated",
     value: function handleSubsUpdated() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.state.topic) {
         var subs = [];
         var topic = this.props.tinode.getTopic(this.state.topic);
         topic.subscribers(function (sub) {
-          if (sub.online && sub.user != _this5.props.myUserId) {
+          if (sub.online && sub.user != _this6.props.myUserId) {
             subs.push(sub);
           }
         });
@@ -3167,9 +3208,7 @@ var MessagesView = function (_React$Component) {
         var status = topic.msgStatus(msg);
 
         if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
-          this.props.readTimerHandler(function () {
-            topic.noteRead(msg.seq);
-          });
+          this.postReadNotification(msg.seq);
         }
 
         this.props.onData(msg);
@@ -3183,6 +3222,7 @@ var MessagesView = function (_React$Component) {
       this.setState({
         fetchingMessages: false
       });
+      this.postReadNotification(0);
     }
   }, {
     key: "handleInfoReceipt",
@@ -3196,7 +3236,7 @@ var MessagesView = function (_React$Component) {
               instance.setState({
                 typingIndicator: false
               });
-            }, _config_js__WEBPACK_IMPORTED_MODULE_12__["KEYPRESS_DELAY"] + 1000);
+            }, _config_js__WEBPACK_IMPORTED_MODULE_13__["KEYPRESS_DELAY"] + 1000);
 
             if (!this.state.typingIndicator) {
               this.setState({
@@ -3217,17 +3257,19 @@ var MessagesView = function (_React$Component) {
       }
     }
   }, {
-    key: "handleImagePreview",
-    value: function handleImagePreview(content) {
+    key: "handleImagePostview",
+    value: function handleImagePostview(content) {
       this.setState({
-        imagePreview: content
+        imagePostview: content
       });
     }
   }, {
-    key: "handleCloseImagePreview",
-    value: function handleCloseImagePreview() {
+    key: "handleClosePreview",
+    value: function handleClosePreview() {
       this.setState({
-        imagePreview: null
+        imagePostview: null,
+        imagePreview: null,
+        docPreview: null
       });
     }
   }, {
@@ -3270,9 +3312,10 @@ var MessagesView = function (_React$Component) {
     }
   }, {
     key: "handleShowContextMenuMessage",
-    value: function handleShowContextMenuMessage(params) {
+    value: function handleShowContextMenuMessage(params, messageSpecificMenuItems) {
       params.topicName = this.state.topic;
-      var menuItems = ['message_delete'];
+      var menuItems = messageSpecificMenuItems || [];
+      menuItems.push('message_delete');
       var topic = this.props.tinode.getTopic(params.topicName);
 
       if (topic) {
@@ -3294,195 +3337,318 @@ var MessagesView = function (_React$Component) {
     key: "handleEnablePeer",
     value: function handleEnablePeer(e) {
       e.preventDefault();
-      this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_12__["DEFAULT_P2P_ACCESS_MODE"], this.state.topic);
+      this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_13__["DEFAULT_P2P_ACCESS_MODE"], this.state.topic);
+    }
+  }, {
+    key: "sendKeyPress",
+    value: function sendKeyPress() {
+      var topic = this.props.tinode.getTopic(this.state.topic);
+
+      if (topic.isSubscribed()) {
+        topic.noteKeyPress();
+      }
+    }
+  }, {
+    key: "sendFileAttachment",
+    value: function sendFileAttachment(file) {
+      var _this7 = this;
+
+      if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"]) {
+        var uploader = this.props.tinode.getLargeFileHelper();
+
+        if (!uploader) {
+          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+          return;
+        }
+
+        var uploadCompletionPromise = uploader.upload(file);
+        var msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
+        this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      } else {
+        Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["fileToBase64"])(file, function (mime, bits, fname) {
+          _this7.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+        }, this.props.onError);
+      }
+    }
+  }, {
+    key: "handleAttachFile",
+    value: function handleAttachFile(file) {
+      if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"]) {
+        this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
+          size: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__["bytesToHumanSize"])(file.size),
+          limit: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"])
+        }), 'err');
+      } else {
+        this.setState({
+          docPreview: {
+            file: file,
+            filename: file.name,
+            size: file.size,
+            type: file.type
+          }
+        });
+      }
+    }
+  }, {
+    key: "sendImageAttachment",
+    value: function sendImageAttachment(caption, mime, bits, width, height, fname) {
+      var msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname);
+
+      if (caption) {
+        msg = Drafty.appendLineBreak(msg);
+        msg = Drafty.append(msg, Drafty.init(caption));
+      }
+
+      this.props.sendMessage(msg);
+    }
+  }, {
+    key: "handleAttachImage",
+    value: function handleAttachImage(file) {
+      var _this8 = this;
+
+      if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"] || _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["SUPPORTED_IMAGE_FORMATS"].indexOf(file.type) < 0) {
+        Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageFileScaledToBase64"])(file, _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], false, function (bits, mime, width, height, fname) {
+          _this8.setState({
+            imagePreview: {
+              url: URL.createObjectURL(file),
+              bits: bits,
+              filename: fname,
+              width: width,
+              height: height,
+              size: bits.length,
+              type: mime
+            }
+          });
+        }, function (err) {
+          _this8.props.onError(err, 'err');
+        });
+      } else {
+        Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageFileToBase64"])(file, function (bits, mime, width, height, fname) {
+          _this8.setState({
+            imagePreview: {
+              url: URL.createObjectURL(file),
+              bits: bits,
+              filename: fname,
+              width: width,
+              height: height,
+              size: bits.length,
+              type: mime
+            }
+          });
+        }, function (err) {
+          _this8.props.onError(err, 'err');
+        });
+      }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this6 = this;
+      var _this9 = this;
 
       var formatMessage = this.props.intl.formatMessage;
       var component;
 
-      if (this.state.topic) {
-        var topic = this.props.tinode.getTopic(this.state.topic);
-        var groupTopic = topic.getType() == 'grp';
-        var messageNodes = [];
-        var previousFrom = null;
-        var chatBoxClass = null;
-
-        for (var i = 0; i < this.state.messages.length; i++) {
-          var msg = this.state.messages[i];
-          var nextFrom = null;
-
-          if (i + 1 < this.state.messages.length) {
-            nextFrom = this.state.messages[i + 1].from;
-          }
-
-          var sequence = 'single';
-
-          if (msg.from == previousFrom) {
-            if (msg.from == nextFrom) {
-              sequence = 'middle';
-            } else {
-              sequence = 'last';
-            }
-          } else if (msg.from == nextFrom) {
-            sequence = 'first';
-          }
-
-          previousFrom = msg.from;
-          var isReply = !(msg.from == this.props.myUserId);
-          var deliveryStatus = topic.msgStatus(msg);
-          var userName = void 0,
-              userAvatar = void 0,
-              userFrom = void 0;
-
-          if (groupTopic) {
-            var user = topic.userDesc(msg.from);
-
-            if (user && user.public) {
-              userName = user.public.fn;
-              userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(user.public.photo);
-            }
-
-            userFrom = msg.from;
-            chatBoxClass = 'chat-box group';
-          } else {
-            chatBoxClass = 'chat-box';
-          }
-
-          messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            tinode: this.props.tinode,
-            content: msg.content,
-            deleted: msg.hi,
-            mimeType: msg.head ? msg.head.mime : null,
-            timestamp: msg.ts,
-            response: isReply,
-            seq: msg.seq,
-            userFrom: userFrom,
-            userName: userName,
-            userAvatar: userAvatar,
-            sequence: sequence,
-            received: deliveryStatus,
-            uploader: msg._uploader,
-            viewportWidth: this.props.viewportWidth,
-            showContextMenu: this.handleShowContextMenuMessage,
-            onImagePreview: this.handleImagePreview,
-            onFormResponse: this.handleFormResponse,
-            onError: this.props.onError,
-            key: msg.seq
-          }));
-        }
-
-        var lastSeen = null;
-        var cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-
-        if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.topicType(cont.topic) == 'p2p') {
-          if (cont.online) {
-            lastSeen = formatMessage(messages.online_now);
-          } else if (cont.seen) {
-            lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_14__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
-          }
-        }
-
-        var avatar = this.state.avatar || true;
-        var online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
-        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-view",
-          className: this.props.hideSelf ? 'nodisplay' : null
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-caption-panel",
-          className: "caption-panel"
-        }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "#",
-          id: "hide-message-view",
-          onClick: function onClick(e) {
-            e.preventDefault();
-
-            _this6.props.onHideMessagesView();
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons"
-        }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-          avatar: avatar,
-          topic: this.state.topic,
-          title: this.state.title
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: online
-        })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-title-group"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-title",
-          className: "panel-title"
-        }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "unnamed_topic",
-          defaultMessage: "Unnamed"
-        }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-last-seen"
-        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          subscribers: this.state.onlineSubs
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-users"
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "#",
-          onClick: this.handleContextClick
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          level: this.props.errorLevel,
-          text: this.props.errorText,
-          onClearError: this.props.onError
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-          show: this.state.fetchingMessages
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "messages-container"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "messages-panel",
-          ref: this.handleScrollReference
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
-          id: "scroller",
-          className: chatBoxClass
-        }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "write-only-background"
-        }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "write-only-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "messages_not_readable",
-          defaultMessage: "no access to messages"
-        })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "peer-messaging-disabled-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons secondary"
-        }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "peers_messaging_disabled",
-          defaultMessage: "Peer's messaging is disabled."
-        }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "#",
-          onClick: this.handleEnablePeer
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "enable_peers_messaging",
-          defaultMessage: "Enable"
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-          tinode: this.props.tinode,
-          topic: this.props.topic,
-          disabled: !this.state.isWriter,
-          sendMessage: this.props.sendMessage,
-          onError: this.props.onError
-        }), this.state.imagePreview ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-          content: this.state.imagePreview,
-          onClose: this.handleCloseImagePreview
-        }) : null);
-      } else {
-        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      if (this.props.hideSelf) {
+        component = null;
+      } else if (!this.state.topic) {
+        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
           hideSelf: this.props.hideSelf,
           serverVersion: this.props.serverVersion,
           serverAddress: this.props.serverAddress
         });
+      } else {
+        var component2;
+
+        if (this.state.imagePreview) {
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+            content: this.state.imagePreview,
+            onClose: this.handleClosePreview,
+            onSendMessage: this.sendImageAttachment
+          });
+        } else if (this.state.imagePostview) {
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+            content: this.state.imagePostview,
+            onClose: this.handleClosePreview
+          });
+        } else if (this.state.docPreview) {
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            content: this.state.docPreview,
+            onClose: this.handleClosePreview,
+            onSendMessage: this.sendFileAttachment
+          });
+        } else {
+          var topic = this.props.tinode.getTopic(this.state.topic);
+          var groupTopic = topic.getType() == 'grp';
+          var messageNodes = [];
+          var previousFrom = null;
+          var chatBoxClass = null;
+
+          for (var i = 0; i < this.state.messages.length; i++) {
+            var msg = this.state.messages[i];
+            var nextFrom = null;
+
+            if (i + 1 < this.state.messages.length) {
+              nextFrom = this.state.messages[i + 1].from;
+            }
+
+            var sequence = 'single';
+
+            if (msg.from == previousFrom) {
+              if (msg.from == nextFrom) {
+                sequence = 'middle';
+              } else {
+                sequence = 'last';
+              }
+            } else if (msg.from == nextFrom) {
+              sequence = 'first';
+            }
+
+            previousFrom = msg.from;
+            var isReply = !(msg.from == this.props.myUserId);
+            var deliveryStatus = topic.msgStatus(msg);
+            var userName = void 0,
+                userAvatar = void 0,
+                userFrom = void 0;
+
+            if (groupTopic) {
+              var user = topic.userDesc(msg.from);
+
+              if (user && user.public) {
+                userName = user.public.fn;
+                userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["makeImageUrl"])(user.public.photo);
+              }
+
+              userFrom = msg.from;
+              chatBoxClass = 'chat-box group';
+            } else {
+              chatBoxClass = 'chat-box';
+            }
+
+            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              tinode: this.props.tinode,
+              content: msg.content,
+              deleted: msg.hi,
+              mimeType: msg.head ? msg.head.mime : null,
+              timestamp: msg.ts,
+              response: isReply,
+              seq: msg.seq,
+              userFrom: userFrom,
+              userName: userName,
+              userAvatar: userAvatar,
+              sequence: sequence,
+              received: deliveryStatus,
+              uploader: msg._uploader,
+              viewportWidth: this.props.viewportWidth,
+              showContextMenu: this.handleShowContextMenuMessage,
+              onImagePreview: this.handleImagePostview,
+              onFormResponse: this.handleFormResponse,
+              onError: this.props.onError,
+              key: msg.seq
+            }));
+          }
+
+          var lastSeen = null;
+          var cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+
+          if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.topicType(cont.topic) == 'p2p') {
+            if (cont.online) {
+              lastSeen = formatMessage(messages.online_now);
+            } else if (cont.seen) {
+              lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
+            }
+          }
+
+          var avatar = this.state.avatar || true;
+          var online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-caption-panel",
+            className: "caption-panel"
+          }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            id: "hide-message-view",
+            onClick: function onClick(e) {
+              e.preventDefault();
+
+              _this9.props.onHideMessagesView();
+            }
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "material-icons"
+          }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "avatar-box"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            avatar: avatar,
+            topic: this.state.topic,
+            title: this.state.title
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            className: online
+          })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-title-group"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-title",
+            className: "panel-title"
+          }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "unnamed_topic",
+            defaultMessage: "Unnamed"
+          }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-last-seen"
+          }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            subscribers: this.state.onlineSubs
+          }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-users"
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            onClick: this.handleContextClick
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "material-icons"
+          }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            level: this.props.errorLevel,
+            text: this.props.errorText,
+            onClearError: this.props.onError
+          }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+            show: this.state.fetchingMessages
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "messages-container"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "messages-panel",
+            ref: this.handleScrollReference
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+            id: "scroller",
+            className: chatBoxClass
+          }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "write-only-background"
+          }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "write-only-note"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "messages_not_readable",
+            defaultMessage: "no access to messages"
+          })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "peer-messaging-disabled-note"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "material-icons secondary"
+          }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "peers_messaging_disabled",
+            defaultMessage: "Peer's messaging is disabled."
+          }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            onClick: this.handleEnablePeer
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "enable_peers_messaging",
+            defaultMessage: "Enable"
+          })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+            onAction: this.handleNewChatAcceptance
+          }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+            disabled: !this.state.isWriter,
+            onSendMessage: this.props.sendMessage,
+            onKeyPress: this.sendKeyPress,
+            onAttachFile: this.handleAttachFile,
+            onAttachImage: this.handleAttachImage,
+            onError: this.props.onError
+          }));
+        }
+
+        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          id: "topic-view"
+        }, component2);
       }
 
       return component;
@@ -3499,7 +3665,9 @@ var MessagesView = function (_React$Component) {
           topic: null,
           title: '',
           avatar: null,
+          docPreview: null,
           imagePreview: null,
+          imagePostview: null,
           typingIndicator: false,
           scrollPosition: 0,
           fetchingMessages: false,
@@ -3509,7 +3677,9 @@ var MessagesView = function (_React$Component) {
         var topic = nextProps.tinode.getTopic(nextProps.topic);
         nextState = {
           topic: nextProps.topic,
+          docPreview: null,
           imagePreview: null,
+          imagePostview: null,
           typingIndicator: false,
           scrollPosition: 0,
           fetchingMessages: false
@@ -3540,7 +3710,7 @@ var MessagesView = function (_React$Component) {
           if (topic.public) {
             Object.assign(nextState, {
               title: topic.public.fn,
-              avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(topic.public.photo)
+              avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["makeImageUrl"])(topic.public.photo)
             });
           } else {
             Object.assign(nextState, {
@@ -3638,13 +3808,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/search-contacts.jsx */ "./src/widgets/search-contacts.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3764,15 +3936,6 @@ var NewTopicView = function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "tabtitle_new_group",
         defaultMessage: "new group"
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-        className: this.state.tabSelected === "byid" ? "active" : null
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#",
-        "data-id": "byid",
-        onClick: this.handleTabClick
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "tabtitle_group_by_id",
-        defaultMessage: "by id"
       })))), this.state.tabSelected === 'grp' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
         onSubmit: this.handleNewGroupSubmit
       }) : this.state.tabSelected === 'byid' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -3819,13 +3982,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3970,13 +4135,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/host-selector.jsx */ "./src/widgets/host-selector.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4127,13 +4294,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx");
 /* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
 /* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4159,7 +4328,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])({
   'login': {
     "id": "sidepanel_title_login",
-    "defaultMessage": "Sign In"
+    "defaultMessage": " "
   },
   'register': {
     "id": "sidepanel_title_register",
@@ -4349,13 +4518,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4413,8 +4584,6 @@ var TinodeWeb = function (_React$Component) {
     _this.handleHashRoute = _this.handleHashRoute.bind(_assertThisInitialized(_this));
     _this.handleOnline = _this.handleOnline.bind(_assertThisInitialized(_this));
     _this.checkForAppUpdate = _this.checkForAppUpdate.bind(_assertThisInitialized(_this));
-    _this.handleAppVisibility = _this.handleAppVisibility.bind(_assertThisInitialized(_this));
-    _this.handleReadTimer = _this.handleReadTimer.bind(_assertThisInitialized(_this));
     _this.handleVisibilityEvent = _this.handleVisibilityEvent.bind(_assertThisInitialized(_this));
     _this.handleError = _this.handleError.bind(_assertThisInitialized(_this));
     _this.handleLoginRequest = _this.handleLoginRequest.bind(_assertThisInitialized(_this));
@@ -4490,6 +4659,7 @@ var TinodeWeb = function (_React$Component) {
         desktopAlerts: settings.desktopAlerts,
         desktopAlertsEnabled: (Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isSecureConnection"])() || Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isLocalHost"])()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_3__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
         firebaseToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('firebase-token'),
+        applicationVisible: !document.hidden,
         errorText: '',
         errorLevel: null,
         errorAction: undefined,
@@ -4697,26 +4867,11 @@ var TinodeWeb = function (_React$Component) {
       });
     }
   }, {
-    key: "handleAppVisibility",
-    value: function handleAppVisibility(visible, callback) {
-      clearTimeout(this.readTimer);
-      this.readTimerCallback = callback;
-
-      if (visible && callback) {
-        this.readTimer = setTimeout(callback, _config_js__WEBPACK_IMPORTED_MODULE_11__["READ_DELAY"]);
-      } else {
-        this.readTimer = null;
-      }
-    }
-  }, {
-    key: "handleReadTimer",
-    value: function handleReadTimer(callback) {
-      this.handleAppVisibility(!document.hidden, callback);
-    }
-  }, {
     key: "handleVisibilityEvent",
     value: function handleVisibilityEvent() {
-      this.handleAppVisibility(!document.hidden, this.readTimerCallback);
+      this.setState({
+        applicationVisible: !document.hidden
+      });
     }
   }, {
     key: "handleError",
@@ -5588,7 +5743,7 @@ var TinodeWeb = function (_React$Component) {
       this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
+      window.location = '/';
     }
   }, {
     key: "handleDeleteMessagesRequest",
@@ -5954,6 +6109,7 @@ var TinodeWeb = function (_React$Component) {
         myUserId: this.state.myUserId,
         serverVersion: this.state.serverVersion,
         serverAddress: this.state.serverAddress,
+        applicationVisible: this.state.applicationVisible,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
         errorAction: this.state.errorAction,
@@ -5963,7 +6119,6 @@ var TinodeWeb = function (_React$Component) {
         onData: this.tnData,
         onError: this.handleError,
         onNewTopicCreated: this.handleNewTopicCreated,
-        readTimerHandler: this.handleReadTimer,
         showContextMenu: this.handleShowContextMenu,
         onChangePermissions: this.handleChangePermissions,
         onNewChat: this.handleNewChatInvitation,
@@ -6091,13 +6246,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6248,13 +6405,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6350,13 +6509,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -6430,13 +6591,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6582,13 +6745,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6723,13 +6888,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6764,7 +6931,7 @@ var ChatMessage = function (_React$Component) {
       props.uploader.onProgress = _this.handleProgress.bind(_assertThisInitialized(_this));
     }
 
-    _this.handlePreviewImage = _this.handlePreviewImage.bind(_assertThisInitialized(_this));
+    _this.handleImagePreview = _this.handleImagePreview.bind(_assertThisInitialized(_this));
     _this.handleFormButtonClick = _this.handleFormButtonClick.bind(_assertThisInitialized(_this));
     _this.handleContextClick = _this.handleContextClick.bind(_assertThisInitialized(_this));
     _this.handleCancelUpload = _this.handleCancelUpload.bind(_assertThisInitialized(_this));
@@ -6772,8 +6939,8 @@ var ChatMessage = function (_React$Component) {
   }
 
   _createClass(ChatMessage, [{
-    key: "handlePreviewImage",
-    value: function handlePreviewImage(e) {
+    key: "handleImagePreview",
+    value: function handleImagePreview(e) {
       e.preventDefault();
       this.props.onImagePreview({
         url: e.target.src,
@@ -6809,11 +6976,13 @@ var ChatMessage = function (_React$Component) {
     value: function handleContextClick(e) {
       e.preventDefault();
       e.stopPropagation();
+      var menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
       this.props.showContextMenu({
         seq: this.props.seq,
+        content: this.props.content,
         y: e.pageY,
         x: e.pageX
-      });
+      }, menuItems);
     }
   }, {
     key: "handleProgress",
@@ -6834,8 +7003,8 @@ var ChatMessage = function (_React$Component) {
 
       var sideClass = this.props.deleted ? 'center' : this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
       var bubbleClass = this.props.sequence == 'single' || this.props.sequence == 'last' ? 'bubble tip' : 'bubble';
-      var avatar = this.props.delRange ? null : this.props.userAvatar || true;
-      var fullDisplay = !this.props.deleted && this.props.response && (this.props.sequence == 'single' || this.props.sequence == 'last');
+      var avatar = this.props.deleted ? null : this.props.userAvatar || true;
+      var fullDisplay = this.props.userFrom && this.props.response && (this.props.sequence == 'single' || this.props.sequence == 'last');
       var content = this.props.content;
       var attachments = [];
 
@@ -6943,7 +7112,7 @@ function draftyFormatter(style, data, values, key) {
           attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__["sanitizeImageUrl"])(attr.src);
 
           if (attr.src) {
-            attr.onClick = this.handlePreviewImage;
+            attr.onClick = this.handleImagePreview;
             attr.className += ' image-clickable';
           } else {
             attr.src = 'img/broken_image.png';
@@ -6995,13 +7164,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CheckBox; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -7069,13 +7240,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _chip_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./chip.jsx */ "./src/widgets/chip.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -7277,13 +7450,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -7360,13 +7535,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -7432,13 +7609,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContactBadges; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -7515,13 +7694,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -7676,13 +7857,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -7833,13 +8016,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -7874,6 +8059,10 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_2__["defineMessages"])
   delete_for_all: {
     "id": "menu_item_delete_for_all",
     "defaultMessage": "Delete for All"
+  },
+  send_retry: {
+    "id": "menu_item_send_retry",
+    "defaultMessage": "Retry"
   },
   mute: {
     "id": "menu_item_mute",
@@ -7970,6 +8159,13 @@ var ContextMenu = function (_React$Component) {
         title: formatMessage(messages.delete_for_all),
         handler: function handler(params, errorHandler) {
           return _this.deleteMessages(false, true, params, errorHandler);
+        }
+      },
+      'menu_item_send_retry': {
+        id: 'menu_item_send_retry',
+        title: formatMessage(messages.send_retry),
+        handler: function handler(params, errorHandler) {
+          return _this.retryMessage(params, errorHandler);
         }
       },
       'topic_unmute': {
@@ -8161,6 +8357,22 @@ var ContextMenu = function (_React$Component) {
       });
     }
   }, {
+    key: "retryMessage",
+    value: function retryMessage(params, errorHandler) {
+      var topic = this.props.tinode.getTopic(params.topicName);
+
+      if (!topic || !topic.flushMessage(params.seq)) {
+        return;
+      }
+
+      var msg = topic.createMessage(params.content, false);
+      return topic.publishDraft(msg).catch(function (err) {
+        if (errorHandler) {
+          errorHandler(err.message, 'err');
+        }
+      });
+    }
+  }, {
     key: "topicPermissionSetter",
     value: function topicPermissionSetter(mode, params, errorHandler) {
       var topic = this.props.tinode.getTopic(params.topicName);
@@ -8227,6 +8439,122 @@ var ContextMenu = function (_React$Component) {
 
 /***/ }),
 
+/***/ "./src/widgets/doc-preview.jsx":
+/*!*************************************!*\
+  !*** ./src/widgets/doc-preview.jsx ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DocPreview; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+function iconFromMime(mime) {
+  var mimeToIcon = {
+    default: 'insert_drive_file',
+    image: 'image',
+    text: 'description',
+    video: 'theaters'
+  };
+  return mimeToIcon[mime] || mimeToIcon[(mime || '').split('/')[0]] || mimeToIcon['default'];
+}
+
+var DocPreview = function (_React$PureComponent) {
+  _inherits(DocPreview, _React$PureComponent);
+
+  function DocPreview(props) {
+    var _this;
+
+    _classCallCheck(this, DocPreview);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(DocPreview).call(this, props));
+    _this.handleSendDoc = _this.handleSendDoc.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(DocPreview, [{
+    key: "handleSendDoc",
+    value: function handleSendDoc(caption) {
+      this.props.onClose();
+      this.props.onSendMessage(this.props.content.file);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      if (!this.props.content) {
+        return null;
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "image-preview"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "image-preview-caption-panel"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this2.props.onClose();
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons gray"
+      }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "image-preview-container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "flex-column narrow"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons gray"
+      }, iconFromMime(this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "label_content_type"
+      })), " ", this.props.content.type || 'application/octet-stream'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "label_size"
+      })), " ", Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__["bytesToHumanSize"])(this.props.content.size)))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        noInput: true,
+        onSendMessage: this.handleSendDoc,
+        onError: this.props.onError
+      }));
+    }
+  }]);
+
+  return DocPreview;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent);
+
+
+;
+
+/***/ }),
+
 /***/ "./src/widgets/error-panel.jsx":
 /*!*************************************!*\
   !*** ./src/widgets/error-panel.jsx ***!
@@ -8240,13 +8568,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -8357,13 +8687,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -8437,13 +8769,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
 /* harmony import */ var _contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-list.jsx */ "./src/widgets/contact-list.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -8712,13 +9046,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -8793,13 +9129,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -8900,24 +9238,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -8938,6 +9280,7 @@ var ImagePreview = function (_React$PureComponent) {
       width: 0,
       height: 0
     };
+    _this.handleSendImage = _this.handleSendImage.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -8953,6 +9296,12 @@ var ImagePreview = function (_React$PureComponent) {
       }
     }
   }, {
+    key: "handleSendImage",
+    value: function handleSendImage(caption) {
+      this.props.onClose();
+      this.props.onSendMessage(caption, this.props.content.type, this.props.content.bits, this.props.content.width, this.props.content.height, this.props.content.filename);
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
@@ -8961,7 +9310,7 @@ var ImagePreview = function (_React$PureComponent) {
         return null;
       }
 
-      var dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["fitImageSize"])(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
+      var dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["fitImageSize"])(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
       var size = dim ? {
         width: dim.dstWidth + 'px',
         height: dim.dstHeight + 'px'
@@ -8973,20 +9322,19 @@ var ImagePreview = function (_React$PureComponent) {
       size.maxWidth = '100%';
       size.maxHeight = '100%';
       var filename = this.props.content.filename;
-      var maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_2__["REM_SIZE"] / 1.5 | 0) - 2, 12);
+      var maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_3__["REM_SIZE"] / 1.5 | 0) - 2, 12);
 
       if (filename.length > maxlength) {
-        filename = filename.slice(0, maxlength / 2 - 1) + '...' + filename.slice(1 - maxlength / 2);
+        filename = filename.slice(0, maxlength / 2 - 1) + '…' + filename.slice(1 - maxlength / 2);
       }
 
       var width = this.props.content.width || '-';
       var height = this.props.content.height || '-';
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        id: "image-preview",
-        onClick: this.props.onClose
+        id: "image-preview"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "image-preview-caption-panel"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, !this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: this.props.content.url,
         download: this.props.content.filename
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -8994,7 +9342,7 @@ var ImagePreview = function (_React$PureComponent) {
       }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "download_action",
         defaultMessage: "download"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: function onClick(e) {
           e.preventDefault();
@@ -9011,7 +9359,12 @@ var ImagePreview = function (_React$PureComponent) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         src: this.props.content.url,
         style: size
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        messagePrompt: "add_image_caption",
+        acceptBlank: true,
+        onSendMessage: this.handleSendImage,
+        onError: this.props.onError
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "image-preview-footer"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_file_name",
@@ -9024,7 +9377,7 @@ var ImagePreview = function (_React$PureComponent) {
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_size",
         defaultMessage: "Size:"
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, width, " \xD7 ", height, " px; ", Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_4__["bytesToHumanSize"])(this.props.content.size)))));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, width, " \xD7 ", height, " px; ", Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__["bytesToHumanSize"])(this.props.content.size)))));
     }
   }]);
 
@@ -9051,13 +9404,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _visible_password_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./visible-password.jsx */ "./src/widgets/visible-password.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9233,13 +9588,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -9323,13 +9680,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LoadSpinner; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -9380,13 +9739,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MenuCancel; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -9444,13 +9805,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MenuContacts; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -9518,13 +9881,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MenuStart; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -9592,13 +9957,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MoreButton; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9672,13 +10039,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9802,13 +10171,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
 /* harmony import */ var _tag_manager_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9985,13 +10356,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -10209,13 +10582,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -10289,7 +10664,7 @@ var ReceivedMarker = function (_React$PureComponent) {
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "timestamp"
-      }, timestamp, '\u00a0', marker);
+      }, timestamp, "\xA0", marker);
     }
   }]);
 
@@ -10317,13 +10692,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -10467,14 +10844,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -10489,7 +10867,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-
 var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])({
   'messaging_disabled': {
     "id": "messaging_disabled_prompt",
@@ -10498,6 +10875,10 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])
   'type_new_message': {
     "id": "new_message_prompt",
     "defaultMessage": "New message"
+  },
+  'add_image_caption': {
+    "id": "image_caption_prompt",
+    "defaultMessage": "Image caption"
   },
   'file_attachment_too_large': {
     "id": "file_attachment_too_large",
@@ -10534,17 +10915,23 @@ var SendMessage = function (_React$PureComponent) {
   _createClass(SendMessage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+      if (this.messageEditArea) {
+        this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+      }
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+      if (this.messageEditArea) {
+        this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+      }
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      this.messageEditArea.focus();
+      if (this.messageEditArea) {
+        this.messageEditArea.focus();
+      }
     }
   }, {
     key: "handlePasteEvent",
@@ -10556,9 +10943,9 @@ var SendMessage = function (_React$PureComponent) {
       }
 
       if (Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["filePasted"])(e, function (bits, mime, width, height, fname) {
-        _this2.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].insertImage(null, 0, mime, bits, width, height, fname));
+        _this2.props.onAttachImage(mime, bits, width, height, fname);
       }, function (mime, bits, fname) {
-        _this2.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attachFile(null, mime, bits, fname));
+        _this2.props.onAttachFile(mime, bits, fname);
       }, this.props.onError)) {
         e.preventDefault();
       }
@@ -10566,24 +10953,8 @@ var SendMessage = function (_React$PureComponent) {
   }, {
     key: "handleAttachImage",
     value: function handleAttachImage(e) {
-      var _this3 = this;
-
       if (e.target.files && e.target.files.length > 0) {
-        var file = e.target.files[0];
-
-        if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_INBAND_ATTACHMENT_SIZE"] || _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["SUPPORTED_IMAGE_FORMATS"].indexOf(file.type) < 0) {
-          Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["imageFileScaledToBase64"])(file, _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_IMAGE_DIM"], false, function (bits, mime, width, height, fname) {
-            _this3.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].insertImage(null, 0, mime, bits, width, height, fname));
-          }, function (err) {
-            _this3.props.onError(err, 'err');
-          });
-        } else {
-          Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["imageFileToBase64"])(file, function (bits, mime, width, height, fname) {
-            _this3.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].insertImage(null, 0, mime, bits, width, height, fname));
-          }, function (err) {
-            _this3.props.onError(err, 'err');
-          });
-        }
+        this.props.onAttachImage(e.target.files[0]);
       }
 
       e.target.value = '';
@@ -10591,34 +10962,10 @@ var SendMessage = function (_React$PureComponent) {
   }, {
     key: "handleAttachFile",
     value: function handleAttachFile(e) {
-      var _this4 = this;
-
       var formatMessage = this.props.intl.formatMessage;
 
       if (e.target.files && e.target.files.length > 0) {
-        var file = e.target.files[0];
-
-        if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_EXTERN_ATTACHMENT_SIZE"]) {
-          this.props.onError(formatMessage(messages.file_attachment_too_large, {
-            size: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__["bytesToHumanSize"])(file.size),
-            limit: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_EXTERN_ATTACHMENT_SIZE"])
-          }), 'err');
-        } else if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_INBAND_ATTACHMENT_SIZE"]) {
-          var uploader = this.props.tinode.getLargeFileHelper();
-
-          if (!uploader) {
-            this.props.onError(formatMessage(messages.cannot_initiate_upload));
-            return;
-          }
-
-          var uploadCompletionPromise = uploader.upload(file);
-          var msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
-          this.props.sendMessage(msg, uploadCompletionPromise, uploader);
-        } else {
-          Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["fileToBase64"])(file, function (mime, bits, fname) {
-            _this4.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attachFile(null, mime, bits, fname));
-          }, this.props.onError);
-        }
+        this.props.onAttachFile(e.target.files[0]);
       }
 
       e.target.value = '';
@@ -10629,8 +10976,8 @@ var SendMessage = function (_React$PureComponent) {
       e.preventDefault();
       var message = this.state.message.trim();
 
-      if (message) {
-        this.props.sendMessage(this.state.message.trim());
+      if (message || this.props.acceptBlank || this.props.noInput) {
+        this.props.onSendMessage(message);
         this.setState({
           message: ''
         });
@@ -10653,16 +11000,14 @@ var SendMessage = function (_React$PureComponent) {
       var newState = {
         message: e.target.value
       };
-      var now = new Date().getTime();
 
-      if (now - this.state.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__["KEYPRESS_DELAY"]) {
-        var topic = this.props.tinode.getTopic(this.props.topic);
+      if (this.props.onKeyPress) {
+        var now = new Date().getTime();
 
-        if (topic.isSubscribed()) {
-          topic.noteKeyPress();
+        if (now - this.state.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__["KEYPRESS_DELAY"]) {
+          this.props.onKeyPress();
+          newState.keypressTimestamp = now;
         }
-
-        newState.keypressTimestamp = now;
       }
 
       this.setState(newState);
@@ -10670,37 +11015,39 @@ var SendMessage = function (_React$PureComponent) {
   }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this3 = this;
 
       var formatMessage = this.props.intl.formatMessage;
-      var prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : formatMessage(messages.type_new_message);
+      var prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "send-message-panel"
-      }, this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }, this.props.onAttachFile ? this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons disabled"
-      }, "photo") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "photo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons disabled"
+      }, "attach_file")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: function onClick(e) {
           e.preventDefault();
 
-          _this5.attachImage.click();
+          _this3.attachImage.click();
         },
         title: "Add image"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons secondary"
-      }, "photo")), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons disabled"
-      }, "attach_file") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "photo")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: function onClick(e) {
           e.preventDefault();
 
-          _this5.attachFile.click();
+          _this3.attachFile.click();
         },
         title: "Attach file"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons secondary"
-      }, "attach_file")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+      }, "attach_file"))) : null, this.props.noInput ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "hr thin"
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         id: "sendMessage",
         placeholder: prompt,
         disabled: this.props.disabled,
@@ -10708,7 +11055,7 @@ var SendMessage = function (_React$PureComponent) {
         onChange: this.handleMessageTyping,
         onKeyPress: this.handleKeyPress,
         ref: function ref(_ref) {
-          _this5.messageEditArea = _ref;
+          _this3.messageEditArea = _ref;
         },
         autoFocus: true
       }), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -10722,7 +11069,7 @@ var SendMessage = function (_React$PureComponent) {
       }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
         ref: function ref(_ref2) {
-          _this5.attachFile = _ref2;
+          _this3.attachFile = _ref2;
         },
         onChange: this.handleAttachFile,
         style: {
@@ -10731,7 +11078,7 @@ var SendMessage = function (_React$PureComponent) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
         ref: function ref(_ref3) {
-          _this5.attachImage = _ref3;
+          _this3.attachImage = _ref3;
         },
         accept: "image/*",
         onChange: this.handleAttachImage,
@@ -10766,13 +11113,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
 /* harmony import */ var _menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./menu-contacts.jsx */ "./src/widgets/menu-contacts.jsx");
 /* harmony import */ var _menu_start_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./menu-start.jsx */ "./src/widgets/menu-start.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -10850,13 +11199,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -11087,13 +11438,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return UnreadBadge; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -11143,13 +11496,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return VisiblePassword; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 

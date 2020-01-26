@@ -5,8 +5,8 @@
   "email_prompt": "电子邮件，例如 zhang@example.com",
   "button_sign_up": "注册",
   "label_your_name": "你的姓名",
-  "label_password": "密码",
-  "password_unchanged_prompt": "未改变",
+  "label_password": ":!![OBSOLETE]!!:密码",
+  "password_unchanged_prompt": ":!![OBSOLETE]!!:未改变",
   "label_user_id": "地址：",
   "label_default_access_mode": "蓦然访问模式：",
   "label_message_sound": "消息提示音：",
@@ -48,7 +48,7 @@
   "enable_peers_messaging": "启用",
   "tabtitle_find_user": "搜索",
   "tabtitle_new_group": "新群组",
-  "tabtitle_group_by_id": "通过 id",
+  "tabtitle_group_by_id": ":!![OBSOLETE]!!:通过 id",
   "search_for_contacts": "使用搜索寻找联系人",
   "new_password_placeholder": "输入新密码",
   "label_reset_password": "发送密码重置邮件：",
@@ -150,5 +150,7 @@
   "topic_delete_warning": ":!![MISSING]!!:Are you sure you want to delete this conversation?",
   "topic_block_warning": ":!![MISSING]!!:Are you sure you want to block this conversation?",
   "search_no_results": ":!![MISSING]!!:Search returned no results",
-  "deleted_content": "内容已删除"
+  "deleted_content": "内容已删除",
+  "image_caption_prompt": "图片标题",
+  "menu_item_send_retry": ":!![MISSING]!!:Retry"
 }

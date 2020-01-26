@@ -4,8 +4,8 @@
   "email_prompt": "Email, напр. ivan@example.com",
   "button_sign_up": "Создать аккаунт",
   "label_your_name": "Ваше имя",
-  "label_password": "Пароль",
-  "password_unchanged_prompt": "Не изменен",
+  "label_password": ":!![OBSOLETE]!!:Пароль",
+  "password_unchanged_prompt": ":!![OBSOLETE]!!:Не изменен",
   "label_user_id": "Адрес:",
   "label_default_access_mode": "Доступ по умолчанию:",
   "label_message_sound": "Звук нового сообщения:",
@@ -27,7 +27,7 @@
   "messages_not_readable": "нет доступа к сообщениям",
   "tabtitle_find_user": "найти",
   "tabtitle_new_group": "создать",
-  "tabtitle_group_by_id": "по id",
+  "tabtitle_group_by_id": ":!![OBSOLETE]!!:по id",
   "label_server_to_use": "Использовать сервер:",
   "label_wire_transport": "Соединение:",
   "button_update": "Применить",
@@ -93,6 +93,7 @@
   "menu_item_clear_messages_for_all": "Удалить для всех",
   "menu_item_delete": "Удалить",
   "menu_item_delete_for_all": "Удалить для всех",
+  "menu_item_send_retry": "Отправить заново",
   "menu_item_mute": "Не уведомлять",
   "menu_item_unmute": "Уведомлять",
   "menu_item_delete_topic": "Удалить чат",
@@ -150,5 +151,6 @@
   "topic_delete_warning": "Вы действительно хотите удалить этот чат?",
   "topic_block_warning": "Вы действительно хотите заблокировать этот чат?",
   "search_no_results": "Ничего не найдено",
-  "deleted_content": "удалено"
+  "deleted_content": "удалено",
+  "image_caption_prompt": "Подпись к фото"
 }

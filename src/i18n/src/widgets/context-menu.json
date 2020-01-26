@@ -25,6 +25,11 @@
     "defaultMessage": "Delete for All"
   },
   {
+    "id": "menu_item_send_retry",
+    "description": "Retry sending message",
+    "defaultMessage": "Retry"
+  },
+  {
     "id": "menu_item_mute",
     "description": "Turn off notifications",
     "defaultMessage": "Mute"

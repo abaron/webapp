@@ -20,13 +20,13 @@ export default class ChatMessage extends React.Component {
       props.uploader.onProgress = this.handleProgress.bind(this);
     }
 
-    this.handlePreviewImage = this.handlePreviewImage.bind(this);
+    this.handleImagePreview = this.handleImagePreview.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
   }
 
-  handlePreviewImage(e) {
+  handleImagePreview(e) {
     e.preventDefault();
     this.props.onImagePreview({
       url: e.target.src,
@@ -58,7 +58,9 @@ export default class ChatMessage extends React.Component {
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.showContextMenu({ seq: this.props.seq, y: e.pageY, x: e.pageX });
+    const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
+    this.props.showContextMenu({ seq: this.props.seq, content: this.props.content,
+                                 y: e.pageY, x: e.pageX }, menuItems);
   }
 
   handleProgress(ratio) {
@@ -73,8 +75,8 @@ export default class ChatMessage extends React.Component {
     const sideClass = this.props.deleted ? 'center' :
       (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
     const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
-    const avatar = this.props.delRange ? null : (this.props.userAvatar || true);
-    const fullDisplay = (!this.props.deleted && this.props.response &&
+    const avatar = this.props.deleted ? null : (this.props.userAvatar || true);
+    const fullDisplay = (this.props.userFrom && this.props.response &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
     let content = this.props.content;
@@ -177,7 +179,7 @@ function draftyFormatter(style, data, values, key) {
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
           attr.src = sanitizeImageUrl(attr.src);
           if (attr.src) {
-            attr.onClick = this.handlePreviewImage;
+            attr.onClick = this.handleImagePreview;
             attr.className += ' image-clickable';
           } else {
             attr.src = 'img/broken_image.png';
