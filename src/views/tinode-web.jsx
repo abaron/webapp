@@ -654,6 +654,7 @@ class TinodeWeb extends React.Component {
         this.handleError(err.message, 'err');
       });
     }
+    this.handleSearchContacts('all');
   }
 
   tnFndSubsUpdated() {
