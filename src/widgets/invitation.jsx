@@ -23,7 +23,7 @@ export default class Invitation extends React.PureComponent {
             description="New chat invitation message: [Accept] [Ignore] [Block]." />
         </div>
         <div className="footer">
-          <button className="blue" onClick={event => { this.handleButtonAction(event, "accept"); }}>
+          <button className="amber" onClick={event => { this.handleButtonAction(event, "accept"); }}>
             <FormattedMessage id="chat_invitation_accept"
               defaultMessage="Accept" description="Action [Accept] for chat invitation." />
           </button>

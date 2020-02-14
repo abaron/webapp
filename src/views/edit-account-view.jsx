@@ -279,7 +279,7 @@ export default class EditAccountView extends React.Component {
             </div>
           </div>
           <div className="hr" />
-          <div className="panel-form-column">
+          <div className="panel-form-column" className={ 'nodisplay' }>
             <a href="#" className="red flat-button" onClick={(e) => {e.preventDefault(); this.props.onLogout();}}>
               <i className="material-icons">exit_to_app</i> &nbsp;<FormattedMessage id="button_logout"
                 defaultMessage="Logout" description="Button [Logout]" />

@@ -78,7 +78,7 @@ class ValidationView extends React.PureComponent {
         }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
-          <button className="blue" onClick={this.handleSubmit}>
+          <button className="amber" onClick={this.handleSubmit}>
             <FormattedMessage id="button_confirm" defaultMessage="Confirm" description="Button [Confirm]" />
           </button>
           <button className="white" onClick={this.handleCancel}>

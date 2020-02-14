@@ -125,7 +125,7 @@ export default class TagManager extends React.Component {
               <button className="outline" onClick={this.handleCancel}>
                 <FormattedMessage id="button_cancel" defautMessage="Cancel" description="Rejection button [Cancel]" />
               </button>
-              <button className="blue" onClick={this.handleSubmit}>
+              <button className="amber" onClick={this.handleSubmit}>
                 <FormattedMessage id="button_ok" defautMessage="OK" description="Confirmation button [OK]" />
               </button>
             </div>

@@ -188,7 +188,7 @@ class GroupManager extends React.Component {
           showUnread={false}
           onTopicSelected={this.handleContactSelected} />
         <div id="group-manager-buttons" className="panel-form-row">
-          <button className="blue" onClick={this.handleSubmit}>
+          <button className="amber" onClick={this.handleSubmit}>
             <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]" />
           </button>
           <button className="white" onClick={this.handleCancel}>

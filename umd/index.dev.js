@@ -152,7 +152,7 @@ var MAX_TITLE_LENGTH = 60;
 var LINK_CONTACT_US = 'email:info@larva.id';
 var LINK_PRIVACY_POLICY = 'https://larva.id/privacy.html';
 var LINK_TERMS_OF_SERVICE = 'https://larva.id/terms.html';
-var LINK_CHAT_LDAP = 'https://adira.larva.id';
+var LINK_CHAT_LDAP = 'http://adira.larva.id';
 var CHAT_LDAP_CLIENT_ID = 'haJC06iWqsC5KThtpHEI';
 
 /***/ }),
@@ -1293,6 +1293,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -1680,9 +1682,9 @@ var EditAccountView = function (_React$Component) {
         onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon')
       }, this.state.anon)))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "hr"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _defineProperty({
         className: "panel-form-column"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "className", 'nodisplay'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         className: "red flat-button",
         onClick: function onClick(e) {
@@ -2748,15 +2750,19 @@ var LogoView = function (_React$PureComponent) {
         id: "dummy-view",
         className: this.props.hideSelf ? 'nodisplay' : null
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://github.com/abaron/chat/"
+        href: "javascript:void();"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         id: "logo",
         alt: "logo",
         src: "img/logo.svg"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Adira Chat Web")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Adira Chat Web")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: 'nodisplay'
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_client",
         defaultMessage: "Client:"
-      }), " ", version), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      }), " ", version), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        className: 'nodisplay'
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_server",
         defaultMessage: "Server:"
       }), " ", this.props.serverVersion, " (", this.props.serverAddress, ")")));
@@ -4066,7 +4072,8 @@ var PasswordResetView = function (_React$PureComponent) {
       var reset = this.state.token && this.state.scheme;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         id: "password-reset-form",
-        onSubmit: this.handleSubmit
+        onSubmit: this.handleSubmit,
+        className: 'nodisplay'
       }, reset ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "new_password_placeholder",
         defaultMessage: "Enter new password"
@@ -4101,7 +4108,7 @@ var PasswordResetView = function (_React$PureComponent) {
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "dialog-buttons"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         type: "submit"
       }, reset ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_reset",
@@ -4254,7 +4261,7 @@ var SettingsView = function (_React$PureComponent) {
         className: "dialog-buttons"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "submit",
-        className: "blue"
+        className: "amber"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_update",
         defaultMessage: "Update"
@@ -6371,7 +6378,7 @@ var ValidationView = function (_React$PureComponent) {
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "dialog-buttons"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         onClick: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_confirm",
@@ -6462,7 +6469,7 @@ var Invitation = function (_React$PureComponent) {
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "footer"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         onClick: function onClick(event) {
           _this2.handleButtonAction(event, "accept");
         }
@@ -6560,7 +6567,7 @@ var Alert = function (_React$PureComponent) {
       }, this.props.reject || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_cancel"
       })) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         onClick: this.props.onConfirm
       }, this.props.confirm || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_ok"
@@ -7208,10 +7215,10 @@ var CheckBox = function (_React$PureComponent) {
     key: "render",
     value: function render() {
       return this.props.onChange ? this.props.checked ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons blue clickable",
+        className: "material-icons amber clickable",
         onClick: this.handleChange
       }, "check_box") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons blue clickable",
+        className: "material-icons amber clickable",
         onClick: this.handleChange
       }, "check_box_outline_blank") : this.props.checked ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
@@ -8961,7 +8968,7 @@ var GroupManager = function (_React$Component) {
         id: "group-manager-buttons",
         className: "panel-form-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         onClick: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_ok",
@@ -9923,7 +9930,8 @@ var MenuStart = function (_React$PureComponent) {
           e.preventDefault();
 
           _this.props.onSignUp();
-        }
+        },
+        className: 'nodisplay'
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "person_add")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
@@ -10139,7 +10147,7 @@ var NewTopicById = function (_React$PureComponent) {
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "dialog-buttons"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         onClick: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_subscribe",
@@ -10265,7 +10273,7 @@ var NewTopicGroup = function (_React$PureComponent) {
     value: function render() {
       var _this2 = this;
 
-      var submitClasses = 'blue';
+      var submitClasses = 'amber';
 
       if (this.props.disabled) {
         submitClasses += ' disabled';
@@ -10552,7 +10560,7 @@ var PermissionsEditor = function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_cancel"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         onClick: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_ok"
@@ -10660,7 +10668,7 @@ var ReceivedMarker = function (_React$PureComponent) {
         }, "done_all");
       } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.MESSAGE_STATUS_READ) {
         marker = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons small blue"
+          className: "material-icons small amber"
         }, "done_all");
       }
 
@@ -11382,7 +11390,7 @@ var TagManager = function (_React$Component) {
         defautMessage: "Cancel",
         description: "Rejection button [Cancel]"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "blue",
+        className: "amber",
         onClick: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_ok",

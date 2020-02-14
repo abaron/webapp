@@ -45,7 +45,7 @@ export default class PasswordResetView extends React.PureComponent {
   render() {
     let reset = (this.state.token && this.state.scheme);
     return (
-      <form id="password-reset-form" onSubmit={this.handleSubmit}>
+      <form id="password-reset-form" onSubmit={this.handleSubmit} className={ 'nodisplay' }>
         {reset ?
           <FormattedMessage id="new_password_placeholder" defaultMessage="Enter new password"
             description="Placeholder for entering new password">{
@@ -75,7 +75,7 @@ export default class PasswordResetView extends React.PureComponent {
           </>
         }
         <div className="dialog-buttons">
-          <button className="blue" type="submit">{reset ?
+          <button className="amber" type="submit">{reset ?
             <FormattedMessage id="button_reset" defaultMessage="Reset" description="Button [Reset]" /> :
             <FormattedMessage id="button_send_request" defaultMessage="Send request"
               description="Button [Send request]" />
