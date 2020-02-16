@@ -152,7 +152,7 @@ var MAX_TITLE_LENGTH = 60;
 var LINK_CONTACT_US = 'email:info@larva.id';
 var LINK_PRIVACY_POLICY = 'https://larva.id/privacy.html';
 var LINK_TERMS_OF_SERVICE = 'https://larva.id/terms.html';
-var LINK_CHAT_LDAP = 'http://adira.local.host';
+var LINK_CHAT_LDAP = 'http://adira.larva.id';
 var CHAT_LDAP_CLIENT_ID = 'haJC06iWqsC5KThtpHEI';
 
 /***/ }),
