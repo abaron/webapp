@@ -286,7 +286,7 @@ export default class EditAccountView extends React.Component {
             </a>
           </div>
           <div className="hr" />
-          <div className="panel-form-column">
+          <div className="panel-form-column" className={ 'nodisplay' }>
             <div>
               <label className="small">
                 <FormattedMessage id="label_legal" defaultMessage="Legal"

@@ -2,6 +2,6 @@
   {
     "id": "search_placeholder",
     "description": "Placeholder in contacts search field",
-    "defaultMessage": "List like email:alice@example.com, tel:17025550003..."
+    "defaultMessage": "Search member ..."
   }
 ]

@@ -57,7 +57,7 @@ export default class SearchContacts extends React.PureComponent {
       <div className="panel-form">
         <div className="panel-form-row">
           <i className="material-icons search">search</i>
-          <FormattedMessage id="search_placeholder" defaultMessage="List like email:alice@example.com, tel:17025550003..."
+          <FormattedMessage id="search_placeholder" defaultMessage="Search member ..."
             description="Placeholder in contacts search field">{
             (search_placeholder) => <input className="search" type="text"
               placeholder={search_placeholder}

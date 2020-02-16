@@ -142,7 +142,7 @@
     "title_permissions": "Permissions",
     "message_sending": "sending...",
     "message_sending_failed": "failed",
-    "search_placeholder": "List like email:alice@example.com, tel:17025550003...",
+    "search_placeholder": "Search member ...",
     "messaging_disabled_prompt": "Messaging disabled",
     "new_message_prompt": "New message",
     "image_caption_prompt": "Image caption",
